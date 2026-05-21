@@ -1,12 +1,17 @@
 package org.example.pensionatkademina.service;
 
 
-import org.example.pensionatkademina.dto.RoomDto;
+import org.example.pensionatkademina.dto.RoomDetailedDto;
+import org.example.pensionatkademina.dto.RoomReservationDto;
+import org.example.pensionatkademina.model.Booking;
 import org.example.pensionatkademina.model.Room;
+import java.util.List;
 
 public interface RoomService {
 
-    RoomDto roomToRoomDto(Room room);
+    List<RoomReservationDto> bookingsToReservations(List<Booking> bookings);
 
-    Room roomDtoToRoom(RoomDto roomDTO);
+    RoomDetailedDto roomToRoomDto(Room room);
+
+    Room roomDtoToRoom(RoomDetailedDto roomDTO);
 }
