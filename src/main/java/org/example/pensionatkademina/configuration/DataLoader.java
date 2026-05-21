@@ -20,15 +20,15 @@ public class DataLoader {
             if (roomRepository.count() == 0) {
 
                 roomRepository.save(
-                        new Room("Single", 1)
+                        new Room(null,"Single", 1)
                 );
 
                 roomRepository.save(
-                        new Room("Double", 2)
+                        new Room(null,"Double", 2)
                 );
 
                 roomRepository.save(
-                        new Room("Single", 1)
+                        new Room(null, "Single", 1)
                 );
             }
         };
