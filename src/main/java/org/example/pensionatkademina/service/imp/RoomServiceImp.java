@@ -21,12 +21,17 @@ public class RoomServiceImp implements RoomService {
     }
 
     @Override
-    public Room roomDTOToRoom(RoomDto DTO) {
-        return Room.builder().id(DTO.getId()).type(DTO.getType()).beds(DTO.getBeds()).build();
+    public Room roomDtoToRoom(RoomDto dto) {
+        return Room.builder().id(dto.getId()).type(dto.getType()).beds(dto.getBeds()).build();
     }
 
     public List<RoomDto> getAllRoom(){
         return repo.findAll().stream().map(room -> roomToRoomDto(room)).toList();
+    }
+
+    public void addRoom(RoomDto dto){
+        Room room = roomDtoToRoom(dto);
+        repo.save(room);
     }
 
 }

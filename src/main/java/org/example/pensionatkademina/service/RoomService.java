@@ -8,5 +8,5 @@ public interface RoomService {
 
     RoomDto roomToRoomDto(Room room);
 
-    Room roomDTOToRoom(RoomDto roomDTO);
+    Room roomDtoToRoom(RoomDto roomDTO);
 }
