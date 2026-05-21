@@ -1,10 +1,7 @@
 package org.example.pensionatkademina.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +25,7 @@ public class Booking {
     private int numberOfGuests;
 
     @ManyToOne
+    @JoinColumn
     private Customer customer;
 
     // TODO: Add room relation when Room entity is ready
