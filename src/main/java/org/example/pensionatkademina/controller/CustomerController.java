@@ -26,9 +26,15 @@ public class CustomerController {
     }
 
     @PutMapping("changeName")
-    public CustomerDto changeCustomerName(@RequestBody String newName, String oldName) {
+    public CustomerDto changeCustomerName(String newName, String oldName) {
         customerService.updateCustomerName(newName, oldName);
         return customerService.findCustomerByName(newName);
+    }
+
+    @DeleteMapping("{id}/delete")
+    public List<CustomerDto> deleteCustomer(@PathVariable Long id) {
+        customerService.deleteCustomer(id);
+        return customerService.getAllCustomers();
     }
 
 
