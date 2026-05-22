@@ -30,9 +30,8 @@ public class Booking {
     @ManyToOne
     private Customer customer;
 
-    // TODO: Add room relation when Room entity is ready
-    // @ManyToOne
-    // private Room room;
+    @ManyToOne
+    private Room room;
 
 
 
