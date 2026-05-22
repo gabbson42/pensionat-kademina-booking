@@ -1,25 +1,20 @@
-package org.example.pensionatkademina.model;
+package org.example.pensionatkademina.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.pensionatkademina.model.Booking;
 
 import java.util.List;
 
 @Data
-@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Customer {
+public class CustomerFullDto {
 
-    @Id
-    @GeneratedValue
     private Long id;
     private String name;
-
-    @OneToMany(mappedBy = "customer")
     private List<Booking> bookings;
 }

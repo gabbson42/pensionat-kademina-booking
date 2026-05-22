@@ -2,7 +2,8 @@ package org.example.pensionatkademina.dto;
 
 
 import lombok.*;
-import org.antlr.v4.runtime.misc.NotNull;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -11,6 +12,25 @@ import org.antlr.v4.runtime.misc.NotNull;
 public class BookingDto {
 
     private Long id;
+
+    // @NotNull(message = " ")
+    private Long customerId;
+
+    private Long roomId;
+
+    private LocalDate checkInDate;
+    private LocalDate checkOutDate;
+
+    private int numberOfGuests;
+
+
+
+
+
+
+
+
+
 
 
 
