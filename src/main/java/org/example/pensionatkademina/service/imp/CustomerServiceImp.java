@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.pensionatkademina.dto.CustomerDto;
 import org.example.pensionatkademina.dto.CustomerFullDto;
 import org.example.pensionatkademina.model.Customer;
+import org.example.pensionatkademina.repository.BookingRepository;
 import org.example.pensionatkademina.repository.CustomerRepository;
 import org.example.pensionatkademina.service.CustomerService;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.List;
 public class CustomerServiceImp implements CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final BookingRepository bookingRepository;
 
     @Override
     public CustomerDto customerToCustomerDto(Customer customer) {
@@ -38,7 +40,6 @@ public class CustomerServiceImp implements CustomerService {
                 .bookings(customerFullDto.getBookings()).build();
     }
 
-
     @Override
     public List<CustomerDto> getAllCustomers(){
         return customerRepository.findAll().stream().map(this::customerToCustomerDto).toList();
@@ -58,5 +59,10 @@ public class CustomerServiceImp implements CustomerService {
     @Override
     public CustomerDto findCustomerByName(String name) {
         return customerToCustomerDto(customerRepository.findCustomerByName(name));
+    }
+
+    @Override
+    public boolean deleteCustomer(CustomerDto customerDto) {
+        return false;
     }
 }
