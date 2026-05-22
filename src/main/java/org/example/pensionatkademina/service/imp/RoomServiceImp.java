@@ -7,6 +7,7 @@ import org.example.pensionatkademina.model.Booking;
 import org.example.pensionatkademina.model.Room;
 import org.example.pensionatkademina.repository.RoomRepository;
 import org.example.pensionatkademina.service.RoomService;
+import org.example.pensionatkademina.utility.RoomSize;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -47,7 +48,8 @@ public class RoomServiceImp implements RoomService {
         return RoomDetailedDto.builder()
                 .id(room.getId())
                 .type(room.getType())
-                .beds(room.getBeds())
+                .size(room.getSize())
+                .extraBeds(room.getExtraBeds())
                 .roomReservations(roomBookings)
                 .build();
     }
@@ -57,18 +59,31 @@ public class RoomServiceImp implements RoomService {
         return Room.builder()
                 .id(dto.getId())
                 .type(dto.getType())
-                .beds(dto.getBeds())
+                .size(dto.getSize())
+                .extraBeds(dto.getExtraBeds())
                 .booking(new ArrayList<>())
                 .build();
     }
 
+    @Override
     public List<RoomDetailedDto> getAllRoom(){
         return repo.findAll().stream().map(room -> roomToRoomDto(room)).toList();
     }
 
+    @Override
     public void addRoom(RoomDetailedDto dto){
         Room room = roomDtoToRoom(dto);
         repo.save(room);
+    }
+
+    @Override
+    public void setExtraBeds(Long roomId, int amount) {
+        Room room = repo.getRoomsById(roomId);
+        if(room.getSize() == RoomSize.SMALL && amount <= 1
+        || room.getSize() == RoomSize.LARGE && amount <= 2) {
+            room.setExtraBeds(amount);
+            repo.save(room);
+        }
     }
 
 }
