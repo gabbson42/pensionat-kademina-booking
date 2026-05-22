@@ -15,4 +15,5 @@ public interface CustomerService {
     void addCustomer(CustomerDto customerDto);
     void updateCustomerName(String newName, String oldName);
     CustomerDto findCustomerByName(String name);
+    boolean deleteCustomer(CustomerDto customerDto);
 }
