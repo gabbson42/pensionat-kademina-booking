@@ -7,6 +7,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
+
 @Configuration
 @RequiredArgsConstructor
 public class DataLoader {
@@ -20,15 +22,15 @@ public class DataLoader {
             if (roomRepository.count() == 0) {
 
                 roomRepository.save(
-                        new Room("Single", 1)
+                        new Room(null,"Single", 1, new ArrayList<>())
                 );
 
                 roomRepository.save(
-                        new Room("Double", 2)
+                        new Room(null,"Double", 2, new ArrayList<>())
                 );
 
                 roomRepository.save(
-                        new Room("Single", 1)
+                        new Room(null, "Single", 1, new ArrayList<>())
                 );
             }
         };

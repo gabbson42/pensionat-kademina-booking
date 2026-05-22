@@ -1,12 +1,15 @@
 package org.example.pensionatkademina.service.imp;
 
 import lombok.RequiredArgsConstructor;
-import org.example.pensionatkademina.dto.RoomDto;
+import org.example.pensionatkademina.dto.RoomDetailedDto;
+import org.example.pensionatkademina.dto.RoomReservationDto;
+import org.example.pensionatkademina.model.Booking;
 import org.example.pensionatkademina.model.Room;
 import org.example.pensionatkademina.repository.RoomRepository;
 import org.example.pensionatkademina.service.RoomService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,20 +19,54 @@ public class RoomServiceImp implements RoomService {
     private final RoomRepository repo;
 
     @Override
-    public RoomDto roomToRoomDto(Room room) {
-        return RoomDto.builder().id(room.getId()).type(room.getType()).beds(room.getBeds()).build();
+    public List<RoomReservationDto> bookingsToReservations(List<Booking> bookings) {
+
+        List<RoomReservationDto> listOfReservations = new ArrayList<>();
+
+        for (Booking booking : bookings) {
+            listOfReservations.add(
+                RoomReservationDto.builder()
+                    .id(booking.getId())
+                    .customerName(booking.getCustomer().getName())
+                    .checkInDate(booking.getCheckInDate())
+                    .checkOutDate(booking.getCheckOutDate())
+                    .numberOfGuests(booking.getNumberOfGuests())
+                    .build()
+            );
+        }
+
+        return listOfReservations;
+    }
+
+
+    @Override
+    public RoomDetailedDto roomToRoomDto(Room room) {
+
+        List<RoomReservationDto> roomBookings = bookingsToReservations(room.getBooking());
+
+        return RoomDetailedDto.builder()
+                .id(room.getId())
+                .type(room.getType())
+                .beds(room.getBeds())
+                .roomReservations(roomBookings)
+                .build();
     }
 
     @Override
-    public Room roomDtoToRoom(RoomDto dto) {
-        return Room.builder().id(dto.getId()).type(dto.getType()).beds(dto.getBeds()).build();
+    public Room roomDtoToRoom(RoomDetailedDto dto) {
+        return Room.builder()
+                .id(dto.getId())
+                .type(dto.getType())
+                .beds(dto.getBeds())
+                .booking(new ArrayList<>())
+                .build();
     }
 
-    public List<RoomDto> getAllRoom(){
+    public List<RoomDetailedDto> getAllRoom(){
         return repo.findAll().stream().map(room -> roomToRoomDto(room)).toList();
     }
 
-    public void addRoom(RoomDto dto){
+    public void addRoom(RoomDetailedDto dto){
         Room room = roomDtoToRoom(dto);
         repo.save(room);
     }

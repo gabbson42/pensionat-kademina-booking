@@ -1,13 +1,9 @@
 package org.example.pensionatkademina.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -18,14 +14,12 @@ public class Room {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String type;
     private int beds;
 
-    public Room(String type, int beds){
-        this.type = type;
-        this.beds = beds;
-    }
+    @OneToMany
+    private List<Booking> booking;
 
 }
 

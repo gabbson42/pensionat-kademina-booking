@@ -5,14 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RoomDto {
+public class RoomDetailedDto {
 
-    private long id;
+    private Long id;
     private String type;
     private int beds;
+    private List<RoomReservationDto> roomReservations;
 
 }
