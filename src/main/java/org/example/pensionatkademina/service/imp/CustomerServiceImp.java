@@ -40,7 +40,6 @@ public class CustomerServiceImp implements CustomerService {
                 .bookings(customerFullDto.getBookings()).build();
     }
 
-
     @Override
     public List<CustomerDto> getAllCustomers(){
         return customerRepository.findAll().stream().map(this::customerToCustomerDto).toList();
