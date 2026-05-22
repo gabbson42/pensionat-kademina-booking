@@ -11,7 +11,14 @@ public interface RoomService {
 
     List<RoomReservationDto> bookingsToReservations(List<Booking> bookings);
 
+    List<RoomDetailedDto> getAllRoom();
+
+    void addRoom(RoomDetailedDto dto);
+
+    void setExtraBeds(Long roomId, int amount);
+
     RoomDetailedDto roomToRoomDto(Room room);
 
     Room roomDtoToRoom(RoomDetailedDto roomDTO);
+
 }

@@ -3,10 +3,7 @@ package org.example.pensionatkademina.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.pensionatkademina.dto.RoomDetailedDto;
 import org.example.pensionatkademina.service.imp.RoomServiceImp;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,9 +18,15 @@ public class RoomController {
         return roomService.getAllRoom();
     }
 
-    @PutMapping("/AddRoom")
+    @PostMapping("/AddRoom")
     public List<RoomDetailedDto> AddRoom(@RequestBody RoomDetailedDto roomDto){
         roomService.addRoom(roomDto);
+        return roomService.getAllRoom();
+    }
+
+    @PutMapping("/extraBeds")
+    public List<RoomDetailedDto> extraBeds(Long roomId, Integer amount){
+        roomService.setExtraBeds(roomId, amount);
         return roomService.getAllRoom();
     }
 }

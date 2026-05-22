@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.pensionatkademina.utility.RoomSize;
+import org.example.pensionatkademina.utility.RoomType;
 
 import java.util.List;
 
@@ -14,8 +16,9 @@ import java.util.List;
 public class RoomDetailedDto {
 
     private Long id;
-    private String type;
-    private int beds;
+    private RoomType type;
+    private RoomSize size;
+    private int extraBeds;
     private List<RoomReservationDto> roomReservations;
 
 }

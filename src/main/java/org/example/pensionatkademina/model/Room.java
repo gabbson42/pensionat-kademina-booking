@@ -2,6 +2,8 @@ package org.example.pensionatkademina.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.pensionatkademina.utility.RoomSize;
+import org.example.pensionatkademina.utility.RoomType;
 
 import java.util.List;
 
@@ -12,13 +14,16 @@ import java.util.List;
 @Builder
 public class Room {
 
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String type;
-    private int beds;
+    private RoomType type;
+    private RoomSize size;
+    private int extraBeds;
 
-    @OneToMany
+    @OneToMany(mappedBy = "room")
     private List<Booking> booking;
 
 }
