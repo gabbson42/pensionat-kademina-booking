@@ -23,10 +23,10 @@ public class CustomerController {
         return "customer";
     }
 
-    @RequestMapping("add")
-    public List<CustomerDto> addCustomer(@RequestBody CustomerDto customerDto) {
-        customerService.addCustomer(customerDto);
-        return customerService.getAllCustomers();
+    @PostMapping("add")
+    public String addCustomer(@RequestParam String name) {
+        customerService.addCustomer(CustomerDto.builder().name(name).build());
+        return "redirect:/customer";
     }
 
     @RequestMapping("editName/{id}")
@@ -37,11 +37,9 @@ public class CustomerController {
     }
 
     @PostMapping("update")
-    public String updateCustomer(CustomerDto customerDto, Model model){
+    public String updateCustomer(CustomerDto customerDto){
         customerService.addCustomer(customerDto);
-        List<CustomerDto> customerList = customerService.getAllCustomers();
-        model.addAttribute("allCustomers", customerList);
-        return "customer";
+        return "redirect:/customer";
     }
 
     @RequestMapping("delete/{id}")
