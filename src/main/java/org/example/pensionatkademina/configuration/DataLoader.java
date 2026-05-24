@@ -1,7 +1,9 @@
 package org.example.pensionatkademina.configuration;
 
 import lombok.RequiredArgsConstructor;
+import org.example.pensionatkademina.model.Customer;
 import org.example.pensionatkademina.model.Room;
+import org.example.pensionatkademina.repository.CustomerRepository;
 import org.example.pensionatkademina.repository.RoomRepository;
 import org.example.pensionatkademina.utility.RoomSize;
 import org.example.pensionatkademina.utility.RoomType;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 public class DataLoader {
 
     private final RoomRepository roomRepository;
+    private final CustomerRepository customerRepository;
 
     @Bean
     CommandLineRunner loadData() {
@@ -38,6 +41,13 @@ public class DataLoader {
                 roomRepository.save(
                         new Room(null, RoomType.SINGLE, RoomSize.SMALL, 0, new ArrayList<>())
                 );
+            }
+
+            if (customerRepository.count() == 0) {
+                customerRepository.save(Customer.builder().name("Gabriel").build());
+                customerRepository.save(Customer.builder().name("Filip").build());
+                customerRepository.save(Customer.builder().name("Simon").build());
+                customerRepository.save(Customer.builder().name("Raul").build());
             }
         };
     }

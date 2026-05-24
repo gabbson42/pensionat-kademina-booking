@@ -3,38 +3,51 @@ package org.example.pensionatkademina.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.pensionatkademina.dto.CustomerDto;
 import org.example.pensionatkademina.service.imp.CustomerServiceImp;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
-@RequestMapping("customer")
+@RequestMapping(path = "customer")
 public class CustomerController {
 
     private final CustomerServiceImp customerService;
 
-    @RequestMapping("all")
-    public List<CustomerDto> allCustomers() {
-        return customerService.getAllCustomers();
+    @RequestMapping
+    public String allCustomers(Model model) {
+        List<CustomerDto> customerList = customerService.getAllCustomers();
+        model.addAttribute("allCustomers", customerList);
+        return "customer";
     }
 
-    @PostMapping("add")
+    @RequestMapping("add")
     public List<CustomerDto> addCustomer(@RequestBody CustomerDto customerDto) {
         customerService.addCustomer(customerDto);
         return customerService.getAllCustomers();
     }
 
-    @PutMapping("changeName")
-    public CustomerDto changeCustomerName(String newName, String oldName) {
-        customerService.updateCustomerName(newName, oldName);
-        return customerService.findCustomerByName(newName);
+    @RequestMapping("editName/{id}")
+    public String changeCustomerName(@PathVariable Long id, Model model) {
+        CustomerDto customerDto = customerService.findCustomerById(id);
+        model.addAttribute("customer", customerDto);
+        return "updateCustomer";
     }
 
-    @DeleteMapping("{id}/delete")
-    public List<CustomerDto> deleteCustomer(@PathVariable Long id) {
+    @PostMapping("update")
+    public String updateCustomer(CustomerDto customerDto, Model model){
+        customerService.addCustomer(customerDto);
+        List<CustomerDto> customerList = customerService.getAllCustomers();
+        model.addAttribute("allCustomers", customerList);
+        return "customer";
+    }
+
+    @RequestMapping("delete/{id}")
+    public String deleteCustomer(@PathVariable Long id) {
         customerService.deleteCustomer(id);
-        return customerService.getAllCustomers();
+        return "redirect:/customer";
     }
 
 

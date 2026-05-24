@@ -61,6 +61,11 @@ public class CustomerServiceImp implements CustomerService {
         return customerToCustomerDto(customerRepository.findCustomerByName(name));
     }
 
+    @Override
+    public CustomerDto findCustomerById(Long id) {
+        return customerToCustomerDto(customerRepository.findById(id).orElseThrow());
+    }
+
     public void deleteCustomer (Long customerId){
 
         boolean hasBooking = bookingRepository.existsByCustomer_Id(customerId);
