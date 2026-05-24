@@ -15,6 +15,7 @@ public interface CustomerService {
     void addCustomer(CustomerDto customerDto);
     void updateCustomerName(String newName, String oldName);
     CustomerDto findCustomerByName(String name);
+    CustomerDto findCustomerById(Long id);
 
 
 }
