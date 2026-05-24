@@ -9,6 +9,7 @@ import java.time.LocalDate;
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     boolean existsByCustomer_Id(Long customerId);
+    Booking findBookingById(Long id);
 
     @Query("""
             SELECT COUNT(b) > 0

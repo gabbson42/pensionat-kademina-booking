@@ -4,5 +4,5 @@ import org.example.pensionatkademina.model.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
-    Room getRoomsById(Long id);
+    Room getRoomById(Long id);
 }

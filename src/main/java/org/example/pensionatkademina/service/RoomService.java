@@ -11,6 +11,8 @@ public interface RoomService {
 
     List<RoomReservationDto> bookingsToReservations(List<Booking> bookings);
 
+    List<Booking> reservationsToBookings(List<RoomReservationDto> reservations);
+
     List<RoomDetailedDto> getAllRoom();
 
     void addRoom(RoomDetailedDto dto);
