@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.example.pensionatkademina.dto.RoomDetailedDto;
 import org.example.pensionatkademina.dto.RoomReservationDto;
 import org.example.pensionatkademina.model.Booking;
+import org.example.pensionatkademina.model.Customer;
 import org.example.pensionatkademina.model.Room;
+import org.example.pensionatkademina.repository.BookingRepository;
+import org.example.pensionatkademina.repository.CustomerRepository;
 import org.example.pensionatkademina.repository.RoomRepository;
 import org.example.pensionatkademina.service.RoomService;
 import org.example.pensionatkademina.utility.RoomSize;
@@ -17,7 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoomServiceImp implements RoomService {
 
-    private final RoomRepository repo;
+    private final RoomRepository roomRepo;
+    private final BookingRepository bookingRepo;
 
     @Override
     public List<RoomReservationDto> bookingsToReservations(List<Booking> bookings) {
@@ -39,6 +43,28 @@ public class RoomServiceImp implements RoomService {
         return listOfReservations;
     }
 
+    @Override
+    public List<Booking> reservationsToBookings(List<RoomReservationDto> reservations) {
+
+        List<Booking> listOfBookings = new ArrayList<>();
+
+        for (RoomReservationDto dto : reservations) {
+
+            Long id = dto.getId();
+            Booking booking = bookingRepo.findBookingById(id);
+
+            booking.setCheckInDate(dto.getCheckInDate());
+            booking.setCheckOutDate(dto.getCheckOutDate());
+            booking.setNumberOfGuests(dto.getNumberOfGuests());
+            booking.setRoom(roomRepo.getRoomById(id));
+
+            listOfBookings.add(booking);
+
+        }
+
+        return listOfBookings;
+    }
+
 
     @Override
     public RoomDetailedDto roomToRoomDto(Room room) {
@@ -56,33 +82,36 @@ public class RoomServiceImp implements RoomService {
 
     @Override
     public Room roomDtoToRoom(RoomDetailedDto dto) {
+
+        List<Booking> roomBookings = reservationsToBookings(dto.getRoomReservations());
+
         return Room.builder()
                 .id(dto.getId())
                 .type(dto.getType())
                 .size(dto.getSize())
                 .extraBeds(dto.getExtraBeds())
-                .booking(new ArrayList<>())
+                .booking(roomBookings)
                 .build();
     }
 
     @Override
     public List<RoomDetailedDto> getAllRoom(){
-        return repo.findAll().stream().map(room -> roomToRoomDto(room)).toList();
+        return roomRepo.findAll().stream().map(room -> roomToRoomDto(room)).toList();
     }
 
     @Override
     public void addRoom(RoomDetailedDto dto){
         Room room = roomDtoToRoom(dto);
-        repo.save(room);
+        roomRepo.save(room);
     }
 
     @Override
     public void setExtraBeds(Long roomId, int amount) {
-        Room room = repo.getRoomsById(roomId);
+        Room room = roomRepo.getRoomById(roomId);
         if(room.getSize() == RoomSize.SMALL && amount <= 1
         || room.getSize() == RoomSize.LARGE && amount <= 2) {
             room.setExtraBeds(amount);
-            repo.save(room);
+            roomRepo.save(room);
         }
     }
 
