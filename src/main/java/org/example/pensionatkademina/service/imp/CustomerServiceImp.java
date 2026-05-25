@@ -67,8 +67,7 @@ public class CustomerServiceImp implements CustomerService {
 
     @Override
     public void updateCustomerName(Long id, String newName) {
-        Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Kunden finns inte!"));
+        Customer customer = customerRepository.findById(id).orElseThrow();
         customer.setName(newName);
         customerRepository.save(customer);
     }
