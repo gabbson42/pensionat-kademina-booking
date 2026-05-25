@@ -15,6 +15,8 @@ public interface RoomService {
 
     List<RoomDetailedDto> getAllRoom();
 
+    Room findById(int id);
+
     void addRoom(RoomDetailedDto dto);
 
     void setExtraBeds(Long roomId, int amount);
@@ -22,5 +24,9 @@ public interface RoomService {
     RoomDetailedDto roomToRoomDto(Room room);
 
     Room roomDtoToRoom(RoomDetailedDto roomDTO);
+
+    void deleteAll();
+
+    boolean existsById(Long id);
 
 }
