@@ -88,7 +88,7 @@ public class CustomerServiceImp implements CustomerService {
         boolean hasBooking = bookingRepository.existsByCustomer_Id(customerId);
 
         if (hasBooking){
-            throw new IllegalArgumentException("Customer has booking");
+            throw new IllegalArgumentException();
         }
 
         customerRepository.deleteById(customerId);

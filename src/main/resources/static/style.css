@@ -2,6 +2,10 @@
     background-color: #021836;
 }
 
+.color-kademina{
+    color:#021836;
+}
+
 .btn-outline-kademina {
     --bs-btn-color: #021836;
     --bs-btn-border-color: #021836;
