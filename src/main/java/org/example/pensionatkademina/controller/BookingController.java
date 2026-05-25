@@ -1,5 +1,6 @@
 package org.example.pensionatkademina.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.pensionatkademina.dto.BookingDto;
 import org.example.pensionatkademina.dto.RoomDetailedDto;
@@ -27,13 +28,13 @@ public class BookingController {
     }
 
     @PostMapping("/add")
-    public BookingDto addBooking(@RequestBody BookingDto bookingDto) {
+    public BookingDto addBooking(@Valid @RequestBody BookingDto bookingDto) {
         return bookingService.createBooking(bookingDto);
     }
 
     @PutMapping("/{id}/update")
     public BookingDto updateBooking(@PathVariable Long id,
-                                    @RequestBody BookingDto bookingDto) {
+                                    @Valid @RequestBody BookingDto bookingDto) {
         return bookingService.updateBooking(id, bookingDto);
     }
 
@@ -43,9 +44,8 @@ public class BookingController {
     }
 
     @GetMapping("/available")
-    public List<RoomDetailedDto> searchAvailableRooms(@RequestParam LocalDate checkInDate,
-                                                      @RequestParam LocalDate checkOutDate,
-                                                      @RequestParam int numberOfGuests) {
+    public List<RoomDetailedDto> searchAvailableRooms(@RequestParam LocalDate checkInDate, @RequestParam LocalDate checkOutDate, @RequestParam int numberOfGuests) {
+
         return bookingService.searchAvailableRooms(
                 checkInDate,
                 checkOutDate,
