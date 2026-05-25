@@ -11,11 +11,11 @@ public interface CustomerService {
     Customer customerDtoToCustomer(CustomerDto customerDto);
     CustomerFullDto customerToCustomerFullDto(Customer customer);
     Customer customerFullDtoToCustomer(CustomerFullDto customerFullDto);
-    List<CustomerDto> getAllCustomers();
+    List<CustomerFullDto> getAllCustomers();
     void addCustomer(CustomerDto customerDto);
-    void updateCustomerName(String newName, String oldName);
-    CustomerDto findCustomerByName(String name);
+    void updateCustomerName(Long id, String newName);
     CustomerDto findCustomerById(Long id);
+    void deleteCustomer (Long customerId);
 
 
 }
