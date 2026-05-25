@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head>
+<head>
     <meta charset="utf-8" />
     <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <meta name="description" content="" />
     <meta name="author" content="" />
@@ -13,142 +13,171 @@
     <link rel="icon" type="image/x-icon" href="../static/images/favicon.ico" />
     <!-- Bootstrap icons-->
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
-      rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+            rel="stylesheet"
     />
     <!-- Core theme CSS (includes Bootstrap)-->
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-      <link href="../static/css/styles.css" rel="stylesheet"/>
-  </head>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+            crossorigin="anonymous"
+    />
+    <link href="/style.css" rel="stylesheet" />
+</head>
 
-  <body>
-    <!-- Navigation-->
-    <nav class="navbar navbar-expand-lg">
-      <div class="container px-4 px-lg-5 m-4">
-        <a class="navbar-brand" href="room.html"
-          ><img src="../static/images/black-font.png" alt="" width="200"
+<body>
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg">
+    <div class="container px-4 px-lg-5 m-4">
+        <a class="navbar-brand" href="index"
+        ><img src="/assets/black-font.png" alt="" width="200"
         /></a>
         <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
         >
-          <span class="navbar-toggler-icon"></span>
+            <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="room.html"
-                >Home</a
-              >
-            </li>
-          </ul>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                <li class="nav-item">
+                    <a
+                            class="nav-link active"
+                            aria-current="page"
+                            href=""
+                            style="color: #021836"
+                    >Booking</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                            class="nav-link active"
+                            aria-current="page"
+                            href=""
+                            style="color: #021836"
+                    >Rooms</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                            class="nav-link active"
+                            aria-current="page"
+                            href="/customer"
+                            style="color: #021836"
+                    >Customers</a
+                    >
+                </li>
+            </ul>
         </div>
-      </div>
-    </nav>
+    </div>
+</nav>
 
-    <!-- Header-->
-    <header class="py-1 bg-kademina">
-      <div class="container px-4 px-lg-5 my-5">
+<!-- Header-->
+<header class="py-1 bg-kademina">
+    <div class="container px-4 px-lg-5 my-5">
         <div class="text-center text-white">
-          <h1 class="display-4 fw-bolder">Kademina Rooms</h1>
-          <p class="lead fw-normal text-white mb-0">
-            Stockholms best rooms!
-          </p>
-          <br>
-          <div id="total-price" ></div>
+            <h1 class="display-4 fw-bolder">Kademina Rooms</h1>
+            <p class="lead fw-normal text-white mb-0">Stockholms best rooms!</p>
+            <br />
+            <div id="total-price"></div>
         </div>
-      </div>
-    </header>
+    </div>
+</header>
 
-    <section class="py-5">
-      <div class="container px-4 px-lg-5 mt-5">
-        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" id="basket-content"></div>
+<div class="container py-5">
+    <div class="row g-4">
 
+        <div class="col-lg-4 col-md-6" th:each="room : ${allRooms}">
+            <div class="card shadow-sm border-0 h-100 rounded-4 overflow-hidden">
+                <!-- Room image -->
+                <img
+                        class="card-img-top"
+                        style="height: 250px; object-fit: cover"
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Imperial_Hotel_Osaka_regular_floor_standard_twin_room_20120630-001.jpg/1280px-Imperial_Hotel_Osaka_regular_floor_standard_twin_room_20120630-001.jpg"
+                        alt="Room Image"
+                />
 
+                <!-- Room details-->
+                <div class="card-body p-4">
+                    <div class="card-body">
+                        <h4 class="card-title font-weight-bold mb-3">
+                            Room <span th:text="${room.id}"></span>
+                        </h4>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <strong>Type: </strong>
+                                <span th:text="${room.type}"></span>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Size: </strong>
+                                <span th:text="${room.size}"></span>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Extra Beds: </strong>
+                                <span th:text="${room.extraBeds}"></span>
+                            </li>
+                        </ul>
+                        <!-- Reservation details-->
+                        <br>
+                        <h5 class="fw-semibold mb-3 ">Reservations</h5>
 
-          <div class="col mb-5">
-              <div class="card h-100">
-                  <div class="fw-bolder" th:each="room : ${allRooms}">
-                  <!-- Room image-->
-                  <img class="card-img-top" style="object-fit: contain" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Imperial_Hotel_Osaka_regular_floor_standard_twin_room_20120630-001.jpg/1280px-Imperial_Hotel_Osaka_regular_floor_standard_twin_room_20120630-001.jpg?utm_source=en.wiktionary.org&utm_campaign=index&utm_content=thumbnail" alt="Image" height="300"/>
-                  <!-- Room details-->
+                        <div
+                                class="border rounded p-3 mb-3 bg-light"
+                                th:if="${!#lists.isEmpty(room.roomReservations)}"
+                        >
+                            <div th:each="booking : ${room.roomReservations}">
+                                <p class="fw-bolder">
+                                    <strong>Booking: </strong>
+                                    <span th:text="${booking.id}"></span>
+                                </p>
 
-                  <div class="card-body p-4">
-                      <div class="text-center">
+                                <p class="fw-bolder">
+                                    <strong>Customer: </strong>
+                                    <span th:text="${booking.customerName}"></span>
+                                </p>
 
-                              <div class="fw-bolder" th:text="'Room: ' + ${room.id}"></div>
-                              <div class="fw-bolder" th:text="'Type: ' + ${room.type}"></div>
-                              <div class="fw-bolder" th:text="'Size: ' + ${room.size}"></div>
-                              <div class="fw-bolder" th:text="'Extra Beds: ' + ${room.extraBeds}"></div>
-                              <div class="fw-bolder" th:each="booking : ${room.roomReservations}">
-                                <div class="fw-bolder" th:text="'Booking: ' + ${booking.id}"></div>
-                                <div class="fw-bolder" th:text="'Customer: ' + ${booking.customerName}"></div>
-                                <div class="fw-bolder" th:text="'Checkin: ' + ${booking.checkInDate}"></div>
-                                <div class="fw-bolder" th:text="'Checkout: ' + ${booking.checkOutDate}"></div>
-                                <div class="fw-bolder" th:text="'Guests: ' + ${booking.numberOfGuests}"></div>
-                              </div>
+                                <p class="fw-bolder">
+                                    <strong>Checkin: </strong>
+                                    <span th:text="${booking.checkInDate}"></span>
+                                </p>
 
+                                <p class="fw-bolder">
+                                    <strong>Check-out: </strong>
+                                    <span th:text="${booking.checkOutDate}"></span>
+                                </p>
 
-                      </div>
-                  </div>
-                  </div>
-                  <!-- Product actions-->
-                  <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                      <div class="text-center"><button onclick="" class="btn btn-outline-kademina mt-auto" >See Bookings</button></div>
-                  </div>
-              </div>
-          </div>
-
-
-      </div>
-    </section>
-
-    <div class="container mb-4 mt-4">
-            <div class="row">
-                <div class="col mb-2">
-                    <form id="basket-form">
-
-                        <label for="name" class="form-label">Namn</label>
-                        <input type="name" id="name" class="form-control mb-4" autocomplete="name" placeholder="John Doe" required>
-                        <div id="nameError" class="invalid-feedback"></div>
-
-                        <label for="number" class="form-label">Telefonnummer</label>
-                        <input type="text" id="number" class="form-control mb-4" autocomplete="tel" placeholder="T.ex. 0737004512" required>
-                        <div id="phoneError" class="invalid-feedback"></div>
-
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" id="email" class="form-control mb-4" autocomplete="email" placeholder="example@email.com" required>
-                        <div id="emailError" class="invalid-feedback"></div>
-
-                        <label for="street" class="form-label">Gata</label>
-                        <input type="text" id="street" class="form-control mb-4" autocomplete="street-address" placeholder="Adressvägen 42" required>
-                        <div id="streetError" class="invalid-feedback"></div>
-
-                        <label for="postnumber" class="form-label">Postnummer</label>
-                        <input type="text" id="postnumber" class="form-control mb-4" autocomplete="postal-code" placeholder="123 45" required>
-                        <div id="postError" class="invalid-feedback"></div>
-
-                        <label for="region" class="form-label">Ort</label>
-                        <input type="text" id="region" class="form-control mb-4" autocomplete="address-level2" placeholder="Ortköping" required>
-                        <div id="regionError" class="invalid-feedback"></div>
-
-                        <button class="btn btn-outline-kademina mt-1" id="order">Lägg beställning</button>
-                        
-                    </form>
+                                <p class="fw-bolder">
+                                    <strong>Guests: </strong>
+                                    <span th:text="${booking.numberOfGuests}"></span>
+                                </p>
+                            </div>
+                        </div>
+                        <!-- No reservations -->
+                        <div
+                                th:if="${#lists.isEmpty(room.roomReservations)}"
+                                class="alert alert-secondary mt-3"
+                        >
+                            No reservations for this room.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-    <!-- Footer-->
-    <footer class="py-5 bg-kademina">
-      <div class="container">
+<!-- Footer-->
+<footer class="py-5 bg-kademina">
+    <div class="container">
         <p class="m-0 text-center text-white">Copyright &copy; Kademina 2026</p>
-      </div>
-    </footer>
-  </body>
+    </div>
+</footer>
+
+</body>
 </html>
