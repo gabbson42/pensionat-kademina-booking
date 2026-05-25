@@ -73,15 +73,11 @@ public class CustomerServiceImp implements CustomerService {
     }
 
     @Override
-    public CustomerDto findCustomerByName(String name) {
-        return customerToCustomerDto(customerRepository.findCustomerByName(name));
-    }
-
-    @Override
     public CustomerDto findCustomerById(Long id) {
         return customerToCustomerDto(customerRepository.findById(id).orElseThrow());
     }
 
+    @Override
     public void deleteCustomer (Long customerId){
 
         boolean hasBooking = bookingRepository.existsByCustomer_Id(customerId);
