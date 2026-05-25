@@ -2,6 +2,7 @@ package org.example.pensionatkademina.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.pensionatkademina.dto.CustomerDto;
+import org.example.pensionatkademina.dto.CustomerFullDto;
 import org.example.pensionatkademina.service.imp.CustomerServiceImp;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +19,7 @@ public class CustomerController {
 
     @RequestMapping
     public String allCustomers(Model model) {
-        List<CustomerDto> customerList = customerService.getAllCustomers();
+        List<CustomerFullDto> customerList = customerService.getAllCustomers();
         model.addAttribute("allCustomers", customerList);
         return "customer";
     }
@@ -29,24 +30,15 @@ public class CustomerController {
         return "redirect:/customer";
     }
 
-    @RequestMapping("editName/{id}")
-    public String changeCustomerName(@PathVariable Long id, Model model) {
-        CustomerDto customerDto = customerService.findCustomerById(id);
-        model.addAttribute("customer", customerDto);
-        return "updateCustomer";
-    }
-
-    @PostMapping("update")
-    public String updateCustomer(CustomerDto customerDto){
-        customerService.addCustomer(customerDto);
+    @PostMapping("edit/{id}")
+    public String editCustomer(@PathVariable Long id, @RequestParam String name) {
+        customerService.updateCustomerName(id, name);
         return "redirect:/customer";
     }
 
-    @RequestMapping("delete/{id}")
+    @PostMapping("delete/{id}")
     public String deleteCustomer(@PathVariable Long id) {
         customerService.deleteCustomer(id);
         return "redirect:/customer";
     }
-
-
 }

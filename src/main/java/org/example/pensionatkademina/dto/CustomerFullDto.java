@@ -16,5 +16,5 @@ public class CustomerFullDto {
 
     private Long id;
     private String name;
-    private List<Booking> bookings;
+    private List<BookingDto> bookings;
 }
