@@ -12,6 +12,7 @@ import org.example.pensionatkademina.repository.RoomRepository;
 import org.example.pensionatkademina.service.RoomService;
 import org.example.pensionatkademina.utility.RoomSize;
 import org.example.pensionatkademina.utility.RoomType;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,6 +43,11 @@ public class RoomServiceTests {
     private Room savedRoom;
     private RoomDetailedDto savedDto;
 
+    private Booking savedBooking;
+    private RoomReservationDto savedReservation;
+    private List<Booking> savedBookings;
+    private List<RoomReservationDto> savedReservations;
+
 
 
     @BeforeEach
@@ -56,23 +63,28 @@ public class RoomServiceTests {
         customerTestRepository.save(Customer.builder().name("Simon").build());
         customerTestRepository.save(Customer.builder().name("Raul").build());
 
-        bookingTestRepository.save(Booking.builder().customer(gabriel)
+        savedBooking = bookingTestRepository.save(Booking.builder().customer(gabriel)
                                                 .room(savedRoom)
                                                 .checkInDate(LocalDate.of(2026, 5, 25))
                                                 .checkOutDate(LocalDate.of(2026, 5, 26))
                                                 .numberOfGuests(1)
                                                 .build());
 
+        //
         savedDto = roomTestService.roomToRoomDto(savedRoom);
+
+        savedBookings.add(savedBooking);
+
+        savedReservations = roomTestService.bookingsToReservations(savedBookings);
 
     }
 
-//    @AfterEach
-//    public void tearDown() {
-//        roomTestService.deleteAll();
-//        roomTestRepository.deleteAll();
-//        customerTestRepository.deleteAll();
-//    }
+    @AfterEach
+    public void tearDown() {
+        bookingTestRepository.deleteAll();
+        roomTestRepository.deleteAll();
+        customerTestRepository.deleteAll();
+    }
 
 
     @Test
@@ -81,12 +93,41 @@ public class RoomServiceTests {
     }
 
     @Test
-    public void entityToDto() throws Exception {
+    void bookingsToReservations() {
+
+        savedReservations = roomTestService.bookingsToReservations(savedBookings);
+
+        assertThat(savedReservations).isNotNull();
+        for (RoomReservationDto reservation : savedReservations) {
+            assertThat(reservation.getCustomerName()).isEqualTo("Gabriel");
+            assertThat(reservation.getCheckInDate()).isEqualTo(LocalDate.of(2026, 5, 25));
+            assertThat(reservation.getCheckOutDate()).isEqualTo(LocalDate.of(2026, 5, 26));
+            assertThat(reservation.getNumberOfGuests()).isEqualTo(1);
+        }
+
+    }
+
+    @Test
+    void reservationsToBookings() {
+
+        List<Booking> bookings = roomTestService.reservationsToBookings(savedReservations);
+
+        assertThat(bookings).isNotNull();
+        for (Booking booking : bookings){
+            assertThat(booking.getCustomer().getName()).isEqualTo("Gabriel");
+            assertThat(booking.getCheckInDate()).isEqualTo(LocalDate.of(2026, 5, 25));
+            assertThat(booking.getCheckOutDate()).isEqualTo(LocalDate.of(2026, 5, 26));
+            assertThat(booking.getNumberOfGuests()).isEqualTo(1);
+        }
+    }
+
+    @Test
+    void roomToRoomDto() {
 
         savedDto = roomTestService.roomToRoomDto(savedRoom);
 
         assertThat(savedDto).isNotNull();
-        assertThat(roomTestService.existsById(savedRoom.getId())).isTrue();
+        assertThat(roomTestService.existsById(savedDto.getId())).isTrue();
         assertThat(savedDto.getType()).isEqualTo(RoomType.SINGLE);
         assertThat(savedDto.getSize()).isEqualTo(RoomSize.SMALL);
         assertThat(savedDto.getExtraBeds()).isEqualTo(0);
@@ -98,10 +139,11 @@ public class RoomServiceTests {
             assertThat(resDto.getCheckOutDate()).isEqualTo(LocalDate.of(2026, 5, 26));
             assertThat(resDto.getNumberOfGuests()).isEqualTo(1);
         }
+
     }
 
     @Test
-    public void dtoToEntity() throws Exception {
+    void roomDtoToRoom() {
 
         Room room = roomTestService.roomDtoToRoom(savedDto);
 
@@ -120,4 +162,23 @@ public class RoomServiceTests {
 
     }
 
+    @Test
+    void getAllRoom() {
+    }
+
+    @Test
+    void addRoom() {
+    }
+
+    @Test
+    void setExtraBeds() {
+    }
+
+    @Test
+    void findById() {
+    }
+
+    @Test
+    void existsById() {
+    }
 }

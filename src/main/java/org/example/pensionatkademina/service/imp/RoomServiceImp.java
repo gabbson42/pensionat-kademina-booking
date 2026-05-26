@@ -129,12 +129,6 @@ public class RoomServiceImp implements RoomService {
     }
 
     @Override
-    public void deleteAll() {
-        roomRepo.deleteAll();
-        bookingRepo.deleteAll();
-    }
-
-    @Override
     public boolean existsById(Long id) {
         return roomRepo.existsById(id);
     }

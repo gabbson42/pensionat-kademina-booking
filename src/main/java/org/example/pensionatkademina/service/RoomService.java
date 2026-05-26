@@ -25,8 +25,6 @@ public interface RoomService {
 
     Room roomDtoToRoom(RoomDetailedDto roomDTO);
 
-    void deleteAll();
-
     boolean existsById(Long id);
 
 }
