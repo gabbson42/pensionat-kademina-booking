@@ -10,7 +10,6 @@ public interface CustomerService {
     CustomerDto customerToCustomerDto(Customer customer);
     Customer customerDtoToCustomer(CustomerDto customerDto);
     CustomerFullDto customerToCustomerFullDto(Customer customer);
-    Customer customerFullDtoToCustomer(CustomerFullDto customerFullDto);
     List<CustomerFullDto> getAllCustomers();
     void addCustomer(CustomerDto customerDto);
     void updateCustomerName(Long id, String newName);

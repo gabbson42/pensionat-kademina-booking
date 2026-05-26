@@ -21,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -38,6 +39,11 @@ public class CustomerServiceTest {
     @Autowired
     private CustomerServiceImp customerService;
 
+    private Customer customer1;
+    private Customer customer2;
+    private Customer customer3;
+    private Customer customer4;
+
     @BeforeEach
     void setUp() {
             roomRepository.save(
@@ -53,10 +59,10 @@ public class CustomerServiceTest {
                     new Room(null, RoomType.SINGLE, RoomSize.SMALL, 0, new ArrayList<>())
             );
 
-            customerRepository.save(Customer.builder().name("Gabriel").build());
-            customerRepository.save(Customer.builder().name("Filip").build());
-            customerRepository.save(Customer.builder().name("Simon").build());
-            customerRepository.save(Customer.builder().name("Raul").build());
+           customer1 = customerRepository.save(Customer.builder().name("Gabriel").build());
+           customer2 = customerRepository.save(Customer.builder().name("Filip").build());
+           customer3 = customerRepository.save(Customer.builder().name("Simon").build());
+           customer4 = customerRepository.save(Customer.builder().name("Raul").build());
 
             bookingRepository.save(Booking.builder().checkInDate(LocalDate.parse("2026-05-25"))
                     .checkOutDate(LocalDate.parse("2026-05-26")).numberOfGuests(1)
@@ -99,32 +105,6 @@ public class CustomerServiceTest {
         assertNotNull(customerFullDto);
         assertThat(customerFullDto.getName().equals("Gabriel"));
         assertThat(customerFullDto.getBookings().size() == 1);
-    }
-
-    @Test
-    void customerFullDtoToCustomerTest() {
-        CustomerFullDto customerFullDto = CustomerFullDto.builder().id(1L).name("Gabriel").build();
-        BookingDto bookingDto = BookingDto.builder().checkInDate(LocalDate.parse("2026-06-25"))
-                .checkOutDate(LocalDate.parse("2026-06-26")).numberOfGuests(1)
-                .customerId(customerFullDto.getId())
-                .roomId(roomRepository.findAll().getFirst().getId()).build();
-        customerFullDto.getBookings().add(bookingDto);
-
-        Customer customer = customerService.customerFullDtoToCustomer(customerFullDto);
-
-        assertNotNull(customer);
-        assertThat(customerFullDto.getId() == 1L);
-        assertThat(customerFullDto.getName().equals("Gabriel"));
-        assertThat(customerFullDto.getBookings().size() == 1);
-
-        for(BookingDto b : customerFullDto.getBookings()) {
-            assertThat(b.getCustomerId() == 1L);
-            assertNotNull(b.getRoomId());
-            assertThat(b.getCheckInDate().equals(LocalDate.parse("2026-06-25")));
-            assertThat(b.getCheckInDate().equals(LocalDate.parse("2026-06-25")));
-
-        }
-
     }
 
     @Test
