@@ -1,11 +1,16 @@
 package org.example.pensionatkademina;
 
+import jakarta.transaction.Transactional;
+import org.example.pensionatkademina.dto.BookingDto;
+import org.example.pensionatkademina.dto.CustomerDto;
+import org.example.pensionatkademina.dto.CustomerFullDto;
 import org.example.pensionatkademina.model.Booking;
 import org.example.pensionatkademina.model.Customer;
 import org.example.pensionatkademina.model.Room;
 import org.example.pensionatkademina.repository.BookingRepository;
 import org.example.pensionatkademina.repository.CustomerRepository;
 import org.example.pensionatkademina.repository.RoomRepository;
+import org.example.pensionatkademina.service.imp.CustomerServiceImp;
 import org.example.pensionatkademina.utility.RoomSize;
 import org.example.pensionatkademina.utility.RoomType;
 import org.junit.jupiter.api.AfterEach;
@@ -17,6 +22,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @SpringBootTest
 public class CustomerServiceTest {
 
@@ -26,6 +35,8 @@ public class CustomerServiceTest {
     private RoomRepository roomRepository;
     @Autowired
     private BookingRepository bookingRepository;
+    @Autowired
+    private CustomerServiceImp customerService;
 
     @BeforeEach
     void setUp() {
@@ -49,31 +60,71 @@ public class CustomerServiceTest {
 
             bookingRepository.save(Booking.builder().checkInDate(LocalDate.parse("2026-05-25"))
                     .checkOutDate(LocalDate.parse("2026-05-26")).numberOfGuests(1)
-                    .customer(customerRepository.findCustomerByName("Gabriel"))
-                    .room(roomRepository.findById(3L).orElseThrow()).build());
+                    .customer(customerRepository.findAll().getFirst())
+                    .room(roomRepository.findAll().getFirst()).build());
     }
 
     @AfterEach
     void tearDown() {
+        bookingRepository.deleteAll();
         customerRepository.deleteAll();
         roomRepository.deleteAll();
-        bookingRepository.deleteAll();
     }
 
     @Test
     void customerToCustomerDtoTest() {
+        CustomerDto customerDto = customerService
+                .customerToCustomerDto(customerRepository.findAll().getFirst());
+
+        assertNotNull(customerDto);
+        assertThat(customerDto.getName()).isEqualTo("Gabriel");
     }
 
     @Test
     void customerDtoToCustomerTest() {
+        CustomerDto customerDto = CustomerDto.builder().id(1L).name("Gabriel").build();
+        Customer customer = customerService.customerDtoToCustomer(customerDto);
+
+        assertNotNull(customer);
+        assertThat(customer.getId() == 1L);
+        assertThat(customer.getName().equals("Gabriel"));
     }
 
     @Test
+    @Transactional
     void customerToCustomerFullDtoTest() {
+        CustomerFullDto customerFullDto = customerService
+                .customerToCustomerFullDto(customerRepository.findAll().getFirst());
+
+        assertNotNull(customerFullDto);
+        assertThat(customerFullDto.getName().equals("Gabriel"));
+        assertThat(customerFullDto.getBookings().size() == 1);
     }
 
     @Test
     void customerFullDtoToCustomerTest() {
+        CustomerFullDto customerFullDto = CustomerFullDto.builder().id(1L).name("Gabriel").build();
+        BookingDto bookingDto = BookingDto.builder().checkInDate(LocalDate.parse("2026-06-25"))
+                .checkOutDate(LocalDate.parse("2026-06-26")).numberOfGuests(1)
+                .customerId(customerFullDto.getId())
+                .roomId(roomRepository.findAll().getFirst().getId()).build();
+        customerFullDto.getBookings().add(bookingDto);
+
+        Customer customer = customerService.customerFullDtoToCustomer(customerFullDto);
+
+        assertNotNull(customer);
+        assertThat(customerFullDto.getId() == 1L);
+        assertThat(customerFullDto.getName().equals("Gabriel"));
+        assertThat(customerFullDto.getBookings().size() == 1);
+
+        for(BookingDto b : customerFullDto.getBookings()) {
+            assertThat(b.getCustomerId() == 1L);
+            assertNotNull(b.getRoomId());
+            assertThat(b.getCheckInDate().equals(LocalDate.parse("2026-06-25")));
+            assertThat(b.getCheckInDate().equals(LocalDate.parse("2026-06-25")));
+
+        }
+
     }
 
     @Test

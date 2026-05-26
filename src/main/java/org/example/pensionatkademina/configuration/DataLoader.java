@@ -58,7 +58,7 @@ public class DataLoader {
                 bookingRepository.save(Booking.builder().checkInDate(LocalDate.parse("2026-05-25"))
                         .checkOutDate(LocalDate.parse("2026-05-26")).numberOfGuests(1)
                         .customer(customerRepository.findCustomerByName("Gabriel"))
-                        .room(roomRepository.findById(3L).orElseThrow()).build());
+                        .room(roomRepository.findAll().getFirst()).build());
             }
         };
     }

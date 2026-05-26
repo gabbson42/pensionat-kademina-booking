@@ -34,6 +34,7 @@ public class CustomerServiceImp implements CustomerService {
     }
 
     @Override
+    @Transactional
     public CustomerFullDto customerToCustomerFullDto(Customer customer) {
         List<BookingDto> bookingDtos = customer.getBookings().stream()
                 .map(this::bookingToBookingDto).toList();
