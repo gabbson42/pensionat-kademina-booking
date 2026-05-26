@@ -9,7 +9,6 @@ import org.example.pensionatkademina.model.Booking;
 import org.example.pensionatkademina.model.Customer;
 import org.example.pensionatkademina.repository.BookingRepository;
 import org.example.pensionatkademina.repository.CustomerRepository;
-import org.example.pensionatkademina.repository.RoomRepository;
 import org.example.pensionatkademina.service.CustomerService;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,6 @@ public class CustomerServiceImp implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final BookingRepository bookingRepository;
-    private final RoomRepository roomRepository;
 
     @Override
     public CustomerDto customerToCustomerDto(Customer customer) {

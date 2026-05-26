@@ -39,11 +39,6 @@ public class CustomerServiceTest {
     @Autowired
     private CustomerServiceImp customerService;
 
-    private Customer customer1;
-    private Customer customer2;
-    private Customer customer3;
-    private Customer customer4;
-
     @BeforeEach
     void setUp() {
             roomRepository.save(
@@ -59,10 +54,10 @@ public class CustomerServiceTest {
                     new Room(null, RoomType.SINGLE, RoomSize.SMALL, 0, new ArrayList<>())
             );
 
-           customer1 = customerRepository.save(Customer.builder().name("Gabriel").build());
-           customer2 = customerRepository.save(Customer.builder().name("Filip").build());
-           customer3 = customerRepository.save(Customer.builder().name("Simon").build());
-           customer4 = customerRepository.save(Customer.builder().name("Raul").build());
+           customerRepository.save(Customer.builder().name("Gabriel").build());
+           customerRepository.save(Customer.builder().name("Filip").build());
+           customerRepository.save(Customer.builder().name("Simon").build());
+           customerRepository.save(Customer.builder().name("Raul").build());
 
             bookingRepository.save(Booking.builder().checkInDate(LocalDate.parse("2026-05-25"))
                     .checkOutDate(LocalDate.parse("2026-05-26")).numberOfGuests(1)
@@ -109,6 +104,13 @@ public class CustomerServiceTest {
 
     @Test
     void getAllCustomersTest() {
+        List<CustomerFullDto> customerList = customerService.getAllCustomers();
+
+        assertNotNull(customerList);
+        assertThat(customerList.size() == 4);
+        assertThat(customerList.getFirst().getName().equals("Gabriel"));
+        assertThat(customerList.getLast().getName().equals("Raul"));
+        assertThat(customerList.getFirst().getBookings().size() == 1);
     }
 
     @Test
