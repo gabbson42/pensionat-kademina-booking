@@ -9,7 +9,7 @@ import java.util.List;
 public interface CustomerService {
     CustomerDto customerToCustomerDto(Customer customer);
     Customer customerDtoToCustomer(CustomerDto customerDto);
-    CustomerFullDto customerToCustomerFullDto(Customer customer);
+    CustomerFullDto customerToCustomerFullDto(Long id);
     List<CustomerFullDto> getAllCustomers();
     void addCustomer(CustomerDto customerDto);
     void updateCustomerName(Long id, String newName);

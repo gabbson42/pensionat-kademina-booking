@@ -33,7 +33,8 @@ public class CustomerServiceImp implements CustomerService {
 
     @Override
     @Transactional
-    public CustomerFullDto customerToCustomerFullDto(Customer customer) {
+    public CustomerFullDto customerToCustomerFullDto(Long id) {
+        Customer customer = customerRepository.findById(id).orElseThrow();
         List<BookingDto> bookingDtos = customer.getBookings().stream()
                 .map(this::bookingToBookingDto).toList();
 
@@ -47,7 +48,7 @@ public class CustomerServiceImp implements CustomerService {
     @Override
     @Transactional
     public List<CustomerFullDto> getAllCustomers(){
-        return customerRepository.findAll().stream().map(this::customerToCustomerFullDto).toList();
+        return customerRepository.findAll().stream().map(c -> customerToCustomerFullDto(c.getId())).toList();
     }
 
     @Override

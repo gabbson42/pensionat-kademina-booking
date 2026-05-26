@@ -1,7 +1,6 @@
 package org.example.pensionatkademina;
 
 import jakarta.transaction.Transactional;
-import org.example.pensionatkademina.dto.BookingDto;
 import org.example.pensionatkademina.dto.CustomerDto;
 import org.example.pensionatkademina.dto.CustomerFullDto;
 import org.example.pensionatkademina.model.Booking;
@@ -25,7 +24,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class CustomerServiceTest {
@@ -41,32 +39,33 @@ public class CustomerServiceTest {
 
     @BeforeEach
     void setUp() {
-            roomRepository.save(
-                    new Room(null, RoomType.SINGLE , RoomSize.SMALL, 0, new ArrayList<>())
-            );
-            roomRepository.save(
-                    new Room(null,RoomType.DOUBLE,  RoomSize.SMALL, 0,new ArrayList<>())
-            );
-            roomRepository.save(
-                    new Room(null,RoomType.DOUBLE, RoomSize.LARGE, 0, new ArrayList<>())
-            );
-            roomRepository.save(
-                    new Room(null, RoomType.SINGLE, RoomSize.SMALL, 0, new ArrayList<>())
-            );
 
-           customerRepository.save(Customer.builder().name("Gabriel").build());
-           customerRepository.save(Customer.builder().name("Filip").build());
-           customerRepository.save(Customer.builder().name("Simon").build());
-           customerRepository.save(Customer.builder().name("Raul").build());
+        roomRepository.save(
+                new Room(null, RoomType.SINGLE, RoomSize.SMALL, 0, new ArrayList<>())
+        );
+        roomRepository.save(
+                new Room(null, RoomType.DOUBLE, RoomSize.SMALL, 0, new ArrayList<>())
+        );
+        roomRepository.save(
+                new Room(null, RoomType.DOUBLE, RoomSize.LARGE, 0, new ArrayList<>())
+        );
+        roomRepository.save(
+                new Room(null, RoomType.SINGLE, RoomSize.SMALL, 0, new ArrayList<>())
+        );
 
-            bookingRepository.save(Booking.builder().checkInDate(LocalDate.parse("2026-05-25"))
-                    .checkOutDate(LocalDate.parse("2026-05-26")).numberOfGuests(1)
-                    .customer(customerRepository.findAll().getFirst())
-                    .room(roomRepository.findAll().getFirst()).build());
+        customerRepository.save(Customer.builder().name("Gabriel").build());
+        customerRepository.save(Customer.builder().name("Filip").build());
+        customerRepository.save(Customer.builder().name("Simon").build());
+        customerRepository.save(Customer.builder().name("Raul").build());
+
+        bookingRepository.save(Booking.builder().checkInDate(LocalDate.parse("2026-05-25"))
+                .checkOutDate(LocalDate.parse("2026-05-26")).numberOfGuests(1)
+                .customer(customerRepository.findAll().getFirst())
+                .room(roomRepository.findAll().getFirst()).build());
     }
 
     @AfterEach
-    void tearDown() {
+    public void tearDown() {
         bookingRepository.deleteAll();
         customerRepository.deleteAll();
         roomRepository.deleteAll();
@@ -87,19 +86,18 @@ public class CustomerServiceTest {
         Customer customer = customerService.customerDtoToCustomer(customerDto);
 
         assertNotNull(customer);
-        assertThat(customer.getId() == 1L);
-        assertThat(customer.getName().equals("Gabriel"));
+        assertThat(customer.getId()).isEqualTo(1L);
+        assertThat(customer.getName()).isEqualTo("Gabriel");
     }
 
     @Test
-    @Transactional
     void customerToCustomerFullDtoTest() {
         CustomerFullDto customerFullDto = customerService
-                .customerToCustomerFullDto(customerRepository.findAll().getFirst());
+                .customerToCustomerFullDto(customerRepository.findAll().getFirst().getId());
 
         assertNotNull(customerFullDto);
-        assertThat(customerFullDto.getName().equals("Gabriel"));
-        assertThat(customerFullDto.getBookings().size() == 1);
+        assertThat(customerFullDto.getName()).isEqualTo("Gabriel");
+        assertThat(customerFullDto.getBookings()).hasSize(1);
     }
 
     @Test
@@ -107,25 +105,47 @@ public class CustomerServiceTest {
         List<CustomerFullDto> customerList = customerService.getAllCustomers();
 
         assertNotNull(customerList);
-        assertThat(customerList.size() == 4);
-        assertThat(customerList.getFirst().getName().equals("Gabriel"));
-        assertThat(customerList.getLast().getName().equals("Raul"));
-        assertThat(customerList.getFirst().getBookings().size() == 1);
+        assertThat(customerList).hasSize(4);
+        assertThat(customerList.getFirst().getName()).isEqualTo("Gabriel");
+        assertThat(customerList.getLast().getName()).isEqualTo("Raul");
+        assertThat(customerList.getFirst().getBookings()).hasSize(1);
     }
 
     @Test
     void addCustomerTest() {
+        customerService.addCustomer(CustomerDto.builder().name("Test").build());
+        Customer customer = customerRepository.findCustomerByName("Test");
+
+        assertNotNull(customer);
+        assertThat(customer.getName()).isEqualTo("Test");
     }
 
     @Test
     void updateCustomerNameTest() {
+        Customer customer = customerRepository.findAll().getFirst();
+        Long id = customer.getId();
+        customerService.updateCustomerName(id, "Test");
+        Customer test = customerRepository.findById(id).orElseThrow();
+        assertThat(test.getName()).isEqualTo("Test");
     }
 
     @Test
     void findCustomerByIdTest() {
+        Customer customer = customerRepository.findAll().getFirst();
+        Long id = customer.getId();
+        CustomerDto customerDto = customerService.findCustomerById(id);
+
+        assertNotNull(customerDto);
+        assertThat(customerDto.getName()).isEqualTo("Gabriel");
     }
 
     @Test
     void deleteCustomerTest() {
+        Customer customer = customerRepository.findAll().getLast();
+        Long id = customer.getId();
+
+        customerService.deleteCustomer(id);
+
+        assertThat(customerRepository.findById(id)).isEmpty();
     }
 }
