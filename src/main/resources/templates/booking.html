@@ -129,7 +129,7 @@
                                                     <select name="roomId" class="form-control" required>
                                                         <option th:each="room : ${rooms}"
                                                                 th:value="${room.id}"
-                                                                th:text="'Room ' + ${room.id} + ' - ' + ${room.type} + ' - ' + ${room.size}"
+                                                                th:text="|Room ${room.id} - ${room.type} - ${room.size} - Extra beds: ${room.extraBeds}|"
                                                                 th:selected="${room.id == booking.roomId}">
                                                         </option>
                                                     </select>
@@ -259,7 +259,7 @@
                             <option value="">Choose room</option>
                             <option th:each="room : ${rooms}"
                                     th:value="${room.id}"
-                                    th:text="'Room ' + ${room.id} + ' - ' + ${room.type} + ' - ' + ${room.size}">
+                                    th:text="|Room ${room.id} - ${room.type} - ${room.size} - Extra beds: ${room.extraBeds}|">
                             </option>
                         </select>
                     </div>
