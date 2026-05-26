@@ -3,54 +3,97 @@ package org.example.pensionatkademina.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.pensionatkademina.dto.BookingDto;
-import org.example.pensionatkademina.dto.RoomDetailedDto;
 import org.example.pensionatkademina.service.BookingService;
+import org.example.pensionatkademina.service.imp.CustomerServiceImp;
+import org.example.pensionatkademina.service.imp.RoomServiceImp;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.util.List;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/bookings")
+@RequestMapping("booking")
+
 public class BookingController {
 
     private final BookingService bookingService;
+    private final CustomerServiceImp customerService;
+    private final RoomServiceImp roomService;
 
-    @GetMapping
-    public List<BookingDto> getAllBookings() {
-        return bookingService.getAllBookings();
+    @RequestMapping
+    public String allBookings(Model model) {
+        model.addAttribute("bookings", bookingService.getAllBookings());
+        model.addAttribute("bookingDto", new BookingDto());
+        model.addAttribute("customers", customerService.getAllCustomers());
+        model.addAttribute("rooms", roomService.getAllRoom());
+
+        return "booking";
     }
 
-    @GetMapping("/{id}")
-    public BookingDto getBookingById(@PathVariable Long id) {
-        return bookingService.getBookingById(id);
+    @PostMapping("add")
+    public String addBooking(@Valid @ModelAttribute BookingDto bookingDto,
+                             RedirectAttributes redirectAttributes) {
+
+        try {
+            bookingService.createBooking(bookingDto);
+            redirectAttributes.addFlashAttribute("message", "Bokning skapad!");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+
+        return "redirect:/booking";
     }
 
-    @PostMapping("/add")
-    public BookingDto addBooking(@Valid @RequestBody BookingDto bookingDto) {
-        return bookingService.createBooking(bookingDto);
+    @GetMapping("edit/{id}")
+    public String editBooking(@PathVariable Long id, Model model) {
+        BookingDto bookingDto = bookingService.getBookingById(id);
+
+        model.addAttribute("bookingDto", bookingDto);
+        model.addAttribute("bookings", bookingService.getAllBookings());
+        model.addAttribute("customers", customerService.getAllCustomers());
+        model.addAttribute("rooms", roomService.getAllRoom());
+
+        return "booking";
     }
 
-    @PutMapping("/{id}/update")
-    public BookingDto updateBooking(@PathVariable Long id,
-                                    @Valid @RequestBody BookingDto bookingDto) {
-        return bookingService.updateBooking(id, bookingDto);
+    @PostMapping("update/{id}")
+    public String updateBooking(@PathVariable Long id,
+                                @Valid @ModelAttribute BookingDto bookingDto,
+                                RedirectAttributes redirectAttributes) {
+
+        try {
+            bookingService.updateBooking(id, bookingDto);
+            redirectAttributes.addFlashAttribute("message", "Bokning uppdaterad!");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+
+        return "redirect:/booking";
     }
 
-    @DeleteMapping("/{id}/delete")
-    public void deleteBooking(@PathVariable Long id) {
-        bookingService.deleteBooking(id);
+    @PostMapping("delete/{id}")
+    public String deleteBooking(@PathVariable Long id,
+                                RedirectAttributes redirectAttributes) {
+
+        try {
+            bookingService.deleteBooking(id);
+            redirectAttributes.addFlashAttribute("message", "Bokningen är borttagen!");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+
+        return "redirect:/booking";
     }
 
-    @GetMapping("/available")
-    public List<RoomDetailedDto> searchAvailableRooms(@RequestParam LocalDate checkInDate, @RequestParam LocalDate checkOutDate, @RequestParam int numberOfGuests) {
-
-        return bookingService.searchAvailableRooms(
-                checkInDate,
-                checkOutDate,
-                numberOfGuests
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public String handleValidationException(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute(
+                "errorMessage",
+                "Kontrollera att kund, rum, datum och antal gäster är korrekt ifyllda tack."
         );
+
+        return "redirect:/booking";
     }
 }
