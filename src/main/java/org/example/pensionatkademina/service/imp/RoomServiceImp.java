@@ -69,7 +69,11 @@ public class RoomServiceImp implements RoomService {
     @Override
     public RoomDetailedDto roomToRoomDto(Room room) {
 
-        List<RoomReservationDto> roomBookings = bookingsToReservations(room.getBooking());
+        List<RoomReservationDto> roomBookings;
+
+        if(room.getBooking() != null) {
+            roomBookings = bookingsToReservations(room.getBooking());
+        }else roomBookings = new ArrayList<>();
 
         return RoomDetailedDto.builder()
                 .id(room.getId())
@@ -83,7 +87,10 @@ public class RoomServiceImp implements RoomService {
     @Override
     public Room roomDtoToRoom(RoomDetailedDto dto) {
 
-        List<Booking> roomBookings = reservationsToBookings(dto.getRoomReservations());
+        List<Booking> roomBookings;
+        if(dto.getRoomReservations() != null) {
+            roomBookings = reservationsToBookings(dto.getRoomReservations());
+        }else  roomBookings = new ArrayList<>();
 
         return Room.builder()
                 .id(dto.getId())
@@ -113,6 +120,17 @@ public class RoomServiceImp implements RoomService {
             room.setExtraBeds(amount);
             roomRepo.save(room);
         }
+    }
+
+    @Override
+    public Room findById(int input) {
+        Long id = (long) input;
+        return roomRepo.getRoomById(id);
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return roomRepo.existsById(id);
     }
 
 }
