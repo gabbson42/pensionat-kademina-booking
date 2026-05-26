@@ -38,7 +38,7 @@ public class BookingController {
 
         try {
             bookingService.createBooking(bookingDto);
-            redirectAttributes.addFlashAttribute("message", "Bokning skapad!");
+            redirectAttributes.addFlashAttribute("message", "Booking created!");
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
@@ -65,7 +65,7 @@ public class BookingController {
 
         try {
             bookingService.updateBooking(id, bookingDto);
-            redirectAttributes.addFlashAttribute("message", "Bokning uppdaterad!");
+            redirectAttributes.addFlashAttribute("message", "Booking updated!");
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
@@ -79,7 +79,7 @@ public class BookingController {
 
         try {
             bookingService.deleteBooking(id);
-            redirectAttributes.addFlashAttribute("message", "Bokningen är borttagen!");
+            redirectAttributes.addFlashAttribute("message", "Booking deleted!");
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
@@ -91,7 +91,8 @@ public class BookingController {
     public String handleValidationException(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute(
                 "errorMessage",
-                "Kontrollera att kund, rum, datum och antal gäster är korrekt ifyllda tack."
+                "Verify that customer, room, dates " +
+                        "and amount of visitors is properly filled out thank you."
         );
 
         return "redirect:/booking";
