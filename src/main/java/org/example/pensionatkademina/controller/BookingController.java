@@ -8,6 +8,7 @@ import org.example.pensionatkademina.service.imp.CustomerServiceImp;
 import org.example.pensionatkademina.service.imp.RoomServiceImp;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -95,6 +96,13 @@ public class BookingController {
                         "and amount of visitors is properly filled out thank you."
         );
 
+        return "redirect:/booking";
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public String handleArgumentException(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage",
+                "Check in date can't be in the past.");
         return "redirect:/booking";
     }
 }
