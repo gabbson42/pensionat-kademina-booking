@@ -25,7 +25,6 @@ public class BookingService {
     private final RoomRepository roomRepository;
 
     public List<BookingDto> getAllBookings() {
-
         return bookingRepository.findAll()
                 .stream()
                 .map(this::toBookingDto)
@@ -33,32 +32,26 @@ public class BookingService {
     }
 
     public BookingDto getBookingById(Long id) {
-
         Booking booking = bookingRepository.findById(id)
-                .orElseThrow(() ->
-                        new IllegalArgumentException("Bokningen hittades inte!"));
+                .orElseThrow(() -> new IllegalArgumentException("Bokningen hittades inte!"));
 
         return toBookingDto(booking);
     }
 
     public BookingDto createBooking(BookingDto bookingDto) {
-
         Booking booking = new Booking();
 
         return saveBooking(booking, bookingDto, null);
     }
 
     public BookingDto updateBooking(Long id, BookingDto bookingDto) {
-
         Booking booking = bookingRepository.findById(id)
-                .orElseThrow(() ->
-                        new IllegalArgumentException("Bokningen hittades inte!"));
+                .orElseThrow(() -> new IllegalArgumentException("Bokningen hittades inte!"));
 
         return saveBooking(booking, bookingDto, id);
     }
 
     public void deleteBooking(Long id) {
-
         if (!bookingRepository.existsById(id)) {
             throw new IllegalArgumentException("Bokningen finns inte!");
         }
@@ -71,18 +64,16 @@ public class BookingService {
                                                       int numberOfGuests) {
 
         if (!checkOutDate.isAfter(checkInDate)) {
-            throw new IllegalArgumentException(
-                    "Utcheckning måste ske efter incheckning!");
+            throw new IllegalArgumentException("Utcheckning måste ske efter incheckning!");
         }
 
         if (numberOfGuests < 1) {
-            throw new IllegalArgumentException(
-                    "Antal gäster måste vara minst 1!");
+            throw new IllegalArgumentException("Antal gäster måste vara minst 1!");
         }
 
         return roomRepository.findAll()
                 .stream()
-                .filter(room -> numberOfGuests <= getMaxGuests(room))
+                .filter(room -> numberOfGuests <= getMaxGuests(room, 0))
                 .filter(room -> !bookingRepository.roomIsBooked(
                         room.getId(),
                         checkInDate,
@@ -97,59 +88,44 @@ public class BookingService {
                                    BookingDto bookingDto,
                                    Long bookingId) {
 
-        Customer customer = customerRepository.findById(
-                        bookingDto.getCustomerId())
-                .orElseThrow(() ->
-                        new IllegalArgumentException("Kunden finns inte!"));
+        Customer customer = customerRepository.findById(bookingDto.getCustomerId())
+                .orElseThrow(() -> new IllegalArgumentException("Kunden finns inte!"));
 
-        Room room = roomRepository.findById(
-                        bookingDto.getRoomId())
-                .orElseThrow(() ->
-                        new IllegalArgumentException("Rummet finns inte!"));
+        Room room = roomRepository.findById(bookingDto.getRoomId())
+                .orElseThrow(() -> new IllegalArgumentException("Rummet finns inte!"));
 
-        if (!bookingDto.getCheckOutDate()
-                .isAfter(bookingDto.getCheckInDate())) {
-
-            throw new IllegalArgumentException(
-                    "Utcheckning måste ske efter incheckning!");
+        if (!bookingDto.getCheckOutDate().isAfter(bookingDto.getCheckInDate())) {
+            throw new IllegalArgumentException("Utcheckning måste ske efter incheckning!");
         }
 
         if (bookingDto.getNumberOfGuests() < 1) {
-            throw new IllegalArgumentException(
-                    "Måste vara minst 1 gäst!");
+            throw new IllegalArgumentException("Måste vara minst 1 gäst!");
         }
 
-        if (room.getExtraBeds() < 0) {
-            throw new IllegalArgumentException(
-                    "Antal extrasängar kan inte vara negativt");
+        if (bookingDto.getExtraBeds() < 0) {
+            throw new IllegalArgumentException("Antal extrasängar kan inte vara negativt!");
         }
 
-        if (room.getType() == RoomType.SINGLE
-                && room.getExtraBeds() > 0) {
-
-            throw new IllegalArgumentException(
-                    "Enkelrum kan ej ha extrasängar!");
+        if (room.getType() == RoomType.SINGLE && bookingDto.getExtraBeds() > 0) {
+            throw new IllegalArgumentException("Enkelrum kan ej ha extrasängar!");
         }
 
         if (room.getType() == RoomType.DOUBLE
                 && room.getSize() == RoomSize.SMALL
-                && room.getExtraBeds() > 1) {
+                && bookingDto.getExtraBeds() > 1) {
 
-            throw new IllegalArgumentException(
-                    "Litet dubbelrum kan max ha en extrasäng!");
+            throw new IllegalArgumentException("Litet dubbelrum kan max ha en extrasäng!");
         }
 
         if (room.getType() == RoomType.DOUBLE
                 && room.getSize() == RoomSize.LARGE
-                && room.getExtraBeds() > 2) {
+                && bookingDto.getExtraBeds() > 2) {
 
-            throw new IllegalArgumentException(
-                    "Stort dubbelrum kan max ha två extrasängar!");
+            throw new IllegalArgumentException("Stort dubbelrum kan max ha två extrasängar!");
         }
 
-        if (bookingDto.getNumberOfGuests() > getMaxGuests(room)) {
-            throw new IllegalArgumentException(
-                    "OBS! För många gäster!");
+        if (bookingDto.getNumberOfGuests() > getMaxGuests(room, bookingDto.getExtraBeds())) {
+            throw new IllegalArgumentException("OBS! För många gäster!");
         }
 
         boolean roomBooked = bookingRepository.roomIsBooked(
@@ -160,8 +136,7 @@ public class BookingService {
         );
 
         if (roomBooked) {
-            throw new IllegalArgumentException(
-                    "Rummet är redan uppbokat dessa datum");
+            throw new IllegalArgumentException("Rummet är redan uppbokat dessa datum");
         }
 
         booking.setCustomer(customer);
@@ -169,23 +144,22 @@ public class BookingService {
         booking.setCheckInDate(bookingDto.getCheckInDate());
         booking.setCheckOutDate(bookingDto.getCheckOutDate());
         booking.setNumberOfGuests(bookingDto.getNumberOfGuests());
+        booking.setExtraBeds(bookingDto.getExtraBeds());
 
         Booking savedBooking = bookingRepository.save(booking);
 
         return toBookingDto(savedBooking);
     }
 
-    private int getMaxGuests(Room room) {
-
+    private int getMaxGuests(Room room, int extraBeds) {
         if (room.getType() == RoomType.SINGLE) {
-            return 1 + room.getExtraBeds();
+            return 1;
         }
 
-        return 2 + room.getExtraBeds();
+        return 2 + extraBeds;
     }
 
     private BookingDto toBookingDto(Booking booking) {
-
         BookingDto dto = new BookingDto();
 
         dto.setId(booking.getId());
@@ -194,12 +168,12 @@ public class BookingService {
         dto.setCheckInDate(booking.getCheckInDate());
         dto.setCheckOutDate(booking.getCheckOutDate());
         dto.setNumberOfGuests(booking.getNumberOfGuests());
+        dto.setExtraBeds(booking.getExtraBeds());
 
         return dto;
     }
 
     private RoomDetailedDto toRoomDto(Room room) {
-
         RoomDetailedDto dto = new RoomDetailedDto();
 
         dto.setId(room.getId());

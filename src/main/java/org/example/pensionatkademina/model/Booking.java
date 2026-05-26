@@ -1,6 +1,5 @@
 package org.example.pensionatkademina.model;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,16 +20,12 @@ public class Booking {
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
     private int numberOfGuests;
+    private int extraBeds;
 
     @ManyToOne
     @JoinColumn
     private Customer customer;
 
-
     @ManyToOne
     private Room room;
-
-
-
-
 }
