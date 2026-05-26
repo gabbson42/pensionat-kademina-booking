@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Booking {
 
     @Id
