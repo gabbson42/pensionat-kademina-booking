@@ -9,6 +9,7 @@ import org.example.pensionatkademina.model.Room;
 import org.example.pensionatkademina.repository.BookingRepository;
 import org.example.pensionatkademina.repository.CustomerRepository;
 import org.example.pensionatkademina.repository.RoomRepository;
+import org.example.pensionatkademina.utility.RoomSize;
 import org.example.pensionatkademina.utility.RoomType;
 import org.springframework.stereotype.Service;
 
@@ -38,14 +39,12 @@ public class BookingService {
     }
 
     public BookingDto createBooking(BookingDto bookingDto) {
-
         Booking booking = new Booking();
 
         return saveBooking(booking, bookingDto, null);
     }
 
     public BookingDto updateBooking(Long id, BookingDto bookingDto) {
-
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Bokningen hittades inte!"));
 
@@ -53,7 +52,6 @@ public class BookingService {
     }
 
     public void deleteBooking(Long id) {
-
         if (!bookingRepository.existsById(id)) {
             throw new IllegalArgumentException("Bokningen finns inte!");
         }
@@ -66,16 +64,16 @@ public class BookingService {
                                                       int numberOfGuests) {
 
         if (!checkOutDate.isAfter(checkInDate)) {
-            throw new IllegalArgumentException("Utcheckning  måste ske efter inchecknin!");
+            throw new IllegalArgumentException("Utcheckning måste ske efter incheckning!");
         }
 
         if (numberOfGuests < 1) {
-            throw new IllegalArgumentException("Antal gäster måste vara minst1!");
+            throw new IllegalArgumentException("Antal gäster måste vara minst 1!");
         }
 
         return roomRepository.findAll()
                 .stream()
-                .filter(room -> numberOfGuests <= getMaxGuests(room))
+                .filter(room -> numberOfGuests <= getMaxGuests(room, 0))
                 .filter(room -> !bookingRepository.roomIsBooked(
                         room.getId(),
                         checkInDate,
@@ -104,8 +102,30 @@ public class BookingService {
             throw new IllegalArgumentException("Måste vara minst 1 gäst!");
         }
 
-        if (bookingDto.getNumberOfGuests() > getMaxGuests(room)) {
-            throw new IllegalArgumentException("För många gäster!");
+        if (bookingDto.getExtraBeds() < 0) {
+            throw new IllegalArgumentException("Antal extrasängar kan inte vara negativt!");
+        }
+
+        if (room.getType() == RoomType.SINGLE && bookingDto.getExtraBeds() > 0) {
+            throw new IllegalArgumentException("Enkelrum kan ej ha extrasängar!");
+        }
+
+        if (room.getType() == RoomType.DOUBLE
+                && room.getSize() == RoomSize.SMALL
+                && bookingDto.getExtraBeds() > 1) {
+
+            throw new IllegalArgumentException("Litet dubbelrum kan max ha en extrasäng!");
+        }
+
+        if (room.getType() == RoomType.DOUBLE
+                && room.getSize() == RoomSize.LARGE
+                && bookingDto.getExtraBeds() > 2) {
+
+            throw new IllegalArgumentException("Stort dubbelrum kan max ha två extrasängar!");
+        }
+
+        if (bookingDto.getNumberOfGuests() > getMaxGuests(room, bookingDto.getExtraBeds())) {
+            throw new IllegalArgumentException("OBS! För många gäster!");
         }
 
         boolean roomBooked = bookingRepository.roomIsBooked(
@@ -124,23 +144,22 @@ public class BookingService {
         booking.setCheckInDate(bookingDto.getCheckInDate());
         booking.setCheckOutDate(bookingDto.getCheckOutDate());
         booking.setNumberOfGuests(bookingDto.getNumberOfGuests());
+        booking.setExtraBeds(bookingDto.getExtraBeds());
 
         Booking savedBooking = bookingRepository.save(booking);
 
         return toBookingDto(savedBooking);
     }
 
-    private int getMaxGuests(Room room) {
-
+    private int getMaxGuests(Room room, int extraBeds) {
         if (room.getType() == RoomType.SINGLE) {
-            return 1 + room.getExtraBeds();
+            return 1;
         }
 
-        return 2 + room.getExtraBeds();
+        return 2 + extraBeds;
     }
 
     private BookingDto toBookingDto(Booking booking) {
-
         BookingDto dto = new BookingDto();
 
         dto.setId(booking.getId());
@@ -149,12 +168,12 @@ public class BookingService {
         dto.setCheckInDate(booking.getCheckInDate());
         dto.setCheckOutDate(booking.getCheckOutDate());
         dto.setNumberOfGuests(booking.getNumberOfGuests());
+        dto.setExtraBeds(booking.getExtraBeds());
 
         return dto;
     }
 
     private RoomDetailedDto toRoomDto(Room room) {
-
         RoomDetailedDto dto = new RoomDetailedDto();
 
         dto.setId(room.getId());

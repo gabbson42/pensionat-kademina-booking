@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class BookingDto {
 
     private Long id;
@@ -33,15 +32,9 @@ public class BookingDto {
     @Min(value = 1, message = "Minst 1 gäst krävs!")
     private int numberOfGuests;
 
+    @Min(value = 0, message = "Extrasängar kan inte vara negativt!")
+    private int extraBeds;
 }
-
-
-
-
-
-
-
-
 
 
 
