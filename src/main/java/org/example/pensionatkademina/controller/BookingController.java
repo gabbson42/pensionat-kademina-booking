@@ -5,12 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.example.pensionatkademina.dto.BookingDto;
 import org.example.pensionatkademina.dto.RoomDetailedDto;
 import org.example.pensionatkademina.service.BookingService;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/bookings")
 public class BookingController {
