@@ -8,6 +8,7 @@ import org.example.pensionatkademina.service.imp.CustomerServiceImp;
 import org.example.pensionatkademina.service.imp.RoomServiceImp;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -38,7 +39,7 @@ public class BookingController {
 
         try {
             bookingService.createBooking(bookingDto);
-            redirectAttributes.addFlashAttribute("message", "Bokning skapad!");
+            redirectAttributes.addFlashAttribute("message", "Booking created!");
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
@@ -65,7 +66,7 @@ public class BookingController {
 
         try {
             bookingService.updateBooking(id, bookingDto);
-            redirectAttributes.addFlashAttribute("message", "Bokning uppdaterad!");
+            redirectAttributes.addFlashAttribute("message", "Booking updated!");
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
@@ -79,7 +80,7 @@ public class BookingController {
 
         try {
             bookingService.deleteBooking(id);
-            redirectAttributes.addFlashAttribute("message", "Bokningen är borttagen!");
+            redirectAttributes.addFlashAttribute("message", "Booking deleted!");
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
@@ -91,9 +92,17 @@ public class BookingController {
     public String handleValidationException(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute(
                 "errorMessage",
-                "Kontrollera att kund, rum, datum och antal gäster är korrekt ifyllda tack."
+                "Verify that customer, room, dates " +
+                        "and amount of visitors is properly filled out thank you."
         );
 
+        return "redirect:/booking";
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public String handleArgumentException(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage",
+                "Check in date can't be in the past.");
         return "redirect:/booking";
     }
 }
