@@ -324,15 +324,16 @@
         <label>Guests:
             <input class = "form-control" type="number" name="numberOfGuests" value="1" min="1" max="4">
         </label>
-        <button class = "btn btn-outline-kademina add-new" type="button">Check Availability</button>
+        <button class = "btn btn-outline-kademina add-new" type="submit">Check Availability</button>
     </form>
     <br>
 </div>
 
-<div class = "text-center" th:each="room : ${availableRooms}">
-
-    <strong th:text="'Room ' + ${room.id}"></strong>
-
+<div>
+    <h5 class="text-center color-kademina" th:if="${not #lists.isEmpty(availableRooms)}">Available Rooms</h5>
+    <div class = "text-center color-kademina" th:each="room : ${availableRooms}">
+        <strong th:text="|Room ${room.id} - ${room.type} - ${room.size}|"></strong>
+    </div>
 </div>
 
 <footer class="py-5 bg-kademina mt-5">
