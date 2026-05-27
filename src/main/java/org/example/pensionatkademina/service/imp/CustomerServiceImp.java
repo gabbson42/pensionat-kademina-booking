@@ -84,6 +84,7 @@ public class CustomerServiceImp implements CustomerService {
     private BookingDto bookingToBookingDto(Booking booking) {
         return BookingDto.builder().id(booking.getId()).customerId(booking.getCustomer().getId())
                 .roomId(booking.getRoom().getId()).checkInDate(booking.getCheckInDate())
-                .checkOutDate(booking.getCheckOutDate()).numberOfGuests(booking.getNumberOfGuests()).build();
+                .checkOutDate(booking.getCheckOutDate()).numberOfGuests(booking.getNumberOfGuests())
+                .extraBeds(booking.getExtraBeds()).build();
     }
 }

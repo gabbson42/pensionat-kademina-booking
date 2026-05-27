@@ -61,7 +61,7 @@ public class CustomerServiceTest {
         bookingRepository.save(Booking.builder().checkInDate(LocalDate.parse("2026-05-25"))
                 .checkOutDate(LocalDate.parse("2026-05-26")).numberOfGuests(1)
                 .customer(customerRepository.findAll().getFirst())
-                .room(roomRepository.findAll().getFirst()).build());
+                .room(roomRepository.findAll().getFirst()).extraBeds(0).build());
     }
 
     @AfterEach
