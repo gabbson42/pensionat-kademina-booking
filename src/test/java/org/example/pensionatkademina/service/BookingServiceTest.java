@@ -8,6 +8,7 @@ import org.example.pensionatkademina.model.Room;
 import org.example.pensionatkademina.repository.BookingRepository;
 import org.example.pensionatkademina.repository.CustomerRepository;
 import org.example.pensionatkademina.repository.RoomRepository;
+import org.example.pensionatkademina.service.imp.BookingServiceImp;
 import org.example.pensionatkademina.utility.RoomSize;
 import org.example.pensionatkademina.utility.RoomType;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +38,7 @@ class BookingServiceTest {
     private RoomRepository roomRepository;
 
     @InjectMocks
-    private BookingService bookingService;
+    private BookingServiceImp bookingService;
 
     private Customer customer;
     private Room doubleSmallRoom;
