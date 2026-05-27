@@ -102,10 +102,6 @@ public class BookingService {
             throw new IllegalArgumentException("Minimum amount of guests is 1!");
         }
 
-        if (bookingDto.getExtraBeds() < 0) {
-            throw new IllegalArgumentException("Antal extrasängar kan inte vara negativt!");
-        }
-
         if (room.getType() == RoomType.SINGLE && bookingDto.getExtraBeds() > 0) {
             throw new IllegalArgumentException("Single rooms can't have extra beds!");
         }
