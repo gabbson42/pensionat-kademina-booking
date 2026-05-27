@@ -3,7 +3,7 @@ package org.example.pensionatkademina.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.pensionatkademina.dto.BookingDto;
-import org.example.pensionatkademina.service.BookingService;
+import org.example.pensionatkademina.service.imp.BookingServiceImp;
 import org.example.pensionatkademina.service.imp.CustomerServiceImp;
 import org.example.pensionatkademina.service.imp.RoomServiceImp;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ import java.time.LocalDate;
 
 public class BookingController {
 
-    private final BookingService bookingService;
+    private final BookingServiceImp bookingService;
     private final CustomerServiceImp customerService;
     private final RoomServiceImp roomService;
 
