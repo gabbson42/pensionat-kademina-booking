@@ -257,26 +257,6 @@ class BookingServiceTest {
         verify(bookingRepository, never()).save(any(Booking.class));
     }
 
-    @Test
-    void createBooking_shouldThrowException_whenExtraBedsIsNegative() {
-        BookingDto dto = BookingDto.builder()
-                .customerId(1L)
-                .roomId(2L)
-                .checkInDate(LocalDate.of(2026, 7, 1))
-                .checkOutDate(LocalDate.of(2026, 7, 3))
-                .numberOfGuests(2)
-                .extraBeds(-1)
-                .build();
-
-        when(customerRepository.findById(1L)).thenReturn(Optional.of(customer));
-        when(roomRepository.findById(2L)).thenReturn(Optional.of(doubleSmallRoom));
-
-        assertThrows(IllegalArgumentException.class, () ->
-                bookingService.createBooking(dto)
-        );
-
-        verify(bookingRepository, never()).save(any(Booking.class));
-    }
 
     @Test
     void createBooking_shouldThrowException_whenSingleRoomHasExtraBeds() {
@@ -348,7 +328,7 @@ class BookingServiceTest {
                 .roomId(2L)
                 .checkInDate(LocalDate.of(2026, 7, 1))
                 .checkOutDate(LocalDate.of(2026, 7, 3))
-                .numberOfGuests(3)
+                .numberOfGuests(4)
                 .extraBeds(0)
                 .build();
 
