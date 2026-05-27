@@ -31,19 +31,19 @@ public class DataLoader {
             if (roomRepository.count() == 0) {
 
                 roomRepository.save(
-                        new Room(null, RoomType.SINGLE , RoomSize.SMALL, 0, new ArrayList<>())
+                        new Room(null, RoomType.SINGLE , RoomSize.SMALL, new ArrayList<>())
                 );
 
                 roomRepository.save(
-                        new Room(null,RoomType.DOUBLE,  RoomSize.SMALL, 0,new ArrayList<>())
+                        new Room(null,RoomType.DOUBLE,  RoomSize.SMALL, new ArrayList<>())
                 );
 
                 roomRepository.save(
-                        new Room(null,RoomType.DOUBLE, RoomSize.LARGE, 0, new ArrayList<>())
+                        new Room(null,RoomType.DOUBLE, RoomSize.LARGE, new ArrayList<>())
                 );
 
                 roomRepository.save(
-                        new Room(null, RoomType.SINGLE, RoomSize.SMALL, 0, new ArrayList<>())
+                        new Room(null, RoomType.SINGLE, RoomSize.SMALL, new ArrayList<>())
                 );
             }
 

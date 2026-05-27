@@ -22,16 +22,4 @@ public class RoomController {
         model.addAttribute("allRooms", allRooms);
         return "room";
     }
-
-    @PostMapping("/AddRoom")
-    public List<RoomDetailedDto> AddRoom(@RequestBody RoomDetailedDto roomDto){
-        roomService.addRoom(roomDto);
-        return roomService.getAllRoom();
-    }
-
-    @PutMapping("/extraBeds")
-    public List<RoomDetailedDto> extraBeds(Long roomId, Integer amount){
-        roomService.setExtraBeds(roomId, amount);
-        return roomService.getAllRoom();
-    }
 }

@@ -18,5 +18,6 @@ public class RoomReservationDto {
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
     private int numberOfGuests;
+    private int extraBeds;
 
 }
