@@ -73,7 +73,7 @@ public class BookingService {
 
         return roomRepository.findAll()
                 .stream()
-                .filter(room -> numberOfGuests <= getMaxGuests(room, 0))
+                .filter(room -> numberOfGuests <= getMaxGuests(room))
                 .filter(room -> !bookingRepository.roomIsBooked(
                         room.getId(),
                         checkInDate,
@@ -120,7 +120,7 @@ public class BookingService {
             throw new IllegalArgumentException("Large double rooms can have a maximum of 2 extra beds!");
         }
 
-        if (bookingDto.getNumberOfGuests() > getMaxGuests(room, bookingDto.getExtraBeds())) {
+        if (bookingDto.getNumberOfGuests() > getMaxGuests(room)) {
             throw new IllegalArgumentException("Too many guests!");
         }
 
@@ -147,12 +147,14 @@ public class BookingService {
         return toBookingDto(savedBooking);
     }
 
-    private int getMaxGuests(Room room, int extraBeds) {
+    private int getMaxGuests(Room room) {
         if (room.getType() == RoomType.SINGLE) {
             return 1;
         }
-
-        return 2 + extraBeds;
+        if (room.getSize() == RoomSize.SMALL) {
+            return 3;
+        }else
+            return 4;
     }
 
     private BookingDto toBookingDto(Booking booking) {
