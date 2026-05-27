@@ -316,15 +316,15 @@
 
     <form th:action="@{/booking/available}" method="post">
         <label>Check-in:
-            <input type="date" name="checkInDate" >
+            <input class = "form-control" type="date" name="checkInDate" >
         </label>
         <label>Check-out:
-            <input type="date" name="checkOutDate">
+            <input class = "form-control" type="date" name="checkOutDate">
         </label>
         <label>Guests:
-            <input type="number" name="numberOfGuests" value="1" min="1" max="4">
+            <input class = "form-control" type="number" name="numberOfGuests" value="1" min="1" max="4">
         </label>
-        <button type="submit">Check Availability</button>
+        <button class = "btn btn-outline-kademina add-new" type="button">Check Availability</button>
     </form>
     <br>
 </div>
