@@ -9,6 +9,7 @@ import org.example.pensionatkademina.service.imp.RoomServiceImp;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -89,7 +90,7 @@ public class BookingController {
         return "redirect:/booking";
     }
 
-    @GetMapping("available")
+    @RequestMapping("available")
     public String searchAvailableRooms(@RequestParam LocalDate checkInDate,
                                        @RequestParam LocalDate checkOutDate,
                                        @RequestParam int numberOfGuests,
@@ -101,7 +102,12 @@ public class BookingController {
                 numberOfGuests
         ));
 
-        return "booking";
+        model.addAttribute("bookings", bookingService.getAllBookings());
+        model.addAttribute("bookingDto", new BookingDto());
+        model.addAttribute("customers", customerService.getAllCustomers());
+        model.addAttribute("rooms", roomService.getAllRoom());
+
+        return "/booking";
     }
 
     @ExceptionHandler(HandlerMethodValidationException.class)
@@ -119,6 +125,13 @@ public class BookingController {
     public String handleArgumentException(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("errorMessage",
                 "Check in date can't be in the past.");
+        return "redirect:/booking";
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public String handleMissingServletRequestParameterException(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage",
+                "You must fill in check-in and check-out date");
         return "redirect:/booking";
     }
 }

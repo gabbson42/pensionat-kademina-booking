@@ -58,21 +58,18 @@ class BookingServiceTest {
                 .id(2L)
                 .type(RoomType.DOUBLE)
                 .size(RoomSize.SMALL)
-                .extraBeds(0)
                 .build();
 
         doubleLargeRoom = Room.builder()
                 .id(3L)
                 .type(RoomType.DOUBLE)
                 .size(RoomSize.LARGE)
-                .extraBeds(0)
                 .build();
 
         singleRoom = Room.builder()
                 .id(4L)
                 .type(RoomType.SINGLE)
                 .size(RoomSize.SMALL)
-                .extraBeds(0)
                 .build();
 
         booking1 = Booking.builder()
@@ -460,7 +457,6 @@ class BookingServiceTest {
                 .id(5L)
                 .type(RoomType.SINGLE)
                 .size(RoomSize.SMALL)
-                .extraBeds(0)
                 .build();
 
         when(roomRepository.findAll()).thenReturn(List.of(doubleSmallRoom, doubleLargeRoom, tooSmallSingleRoom));
