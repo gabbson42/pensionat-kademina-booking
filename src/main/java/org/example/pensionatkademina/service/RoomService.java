@@ -11,19 +11,9 @@ public interface RoomService {
 
     List<RoomReservationDto> bookingsToReservations(List<Booking> bookings);
 
-    List<Booking> reservationsToBookings(List<RoomReservationDto> reservations);
-
     List<RoomDetailedDto> getAllRoom();
 
-    Room findById(int id);
-
-    void addRoom(RoomDetailedDto dto);
-
-    void setExtraBeds(Long roomId, int amount);
-
     RoomDetailedDto roomToRoomDto(Room room);
-
-    Room roomDtoToRoom(RoomDetailedDto roomDTO);
 
     boolean existsById(Long id);
 

@@ -73,10 +73,6 @@
                                 <strong>Size: </strong>
                                 <span th:text="${room.size}"></span>
                             </li>
-                            <li class="list-group-item">
-                                <strong>Extra Beds: </strong>
-                                <span th:text="${room.extraBeds}"></span>
-                            </li>
                         </ul>
                         <!-- Reservation Details-->
                         <br>
@@ -110,6 +106,11 @@
                                 <p class="fw-bolder">
                                     <strong>Guests: </strong>
                                     <span th:text="${booking.numberOfGuests}"></span>
+                                </p>
+
+                                <p class="fw-bolder">
+                                    <strong>Extra beds: </strong>
+                                    <span th:text="${booking.extraBeds}"></span>
                                 </p>
                             </div>
                         </div>
