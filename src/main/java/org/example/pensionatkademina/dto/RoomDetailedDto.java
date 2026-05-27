@@ -18,7 +18,6 @@ public class RoomDetailedDto {
     private Long id;
     private RoomType type;
     private RoomSize size;
-    private int extraBeds;
     private List<RoomReservationDto> roomReservations;
 
 }

@@ -50,7 +50,7 @@
                     <a
                             class="nav-link active"
                             aria-current="page"
-                            href=""
+                            href="/booking"
                             style="color: #021836"
                     >Booking</a
                     >
@@ -59,7 +59,7 @@
                     <a
                             class="nav-link active"
                             aria-current="page"
-                            href="http://localhost:8080/Rooms"
+                            href="/Rooms"
                             style="color: #021836"
                     >Rooms</a
                     >
@@ -118,10 +118,6 @@
                                 <strong>Size: </strong>
                                 <span th:text="${room.size}"></span>
                             </li>
-                            <li class="list-group-item">
-                                <strong>Extra Beds: </strong>
-                                <span th:text="${room.extraBeds}"></span>
-                            </li>
                         </ul>
                         <!-- Reservation Details-->
                         <br>
@@ -155,6 +151,11 @@
                                 <p class="fw-bolder">
                                     <strong>Guests: </strong>
                                     <span th:text="${booking.numberOfGuests}"></span>
+                                </p>
+
+                                <p class="fw-bolder">
+                                    <strong>Extra beds: </strong>
+                                    <span th:text="${booking.extraBeds}"></span>
                                 </p>
                             </div>
                         </div>

@@ -21,7 +21,6 @@ public class Room {
     private Long id;
     private RoomType type;
     private RoomSize size;
-    private int extraBeds;
 
     @OneToMany(mappedBy = "room")
     private List<Booking> booking;

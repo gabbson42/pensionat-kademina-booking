@@ -179,7 +179,6 @@ public class BookingService {
         dto.setId(room.getId());
         dto.setType(room.getType());
         dto.setSize(room.getSize());
-        dto.setExtraBeds(room.getExtraBeds());
 
         return dto;
     }
