@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.time.LocalDate;
 
 @Controller
 @RequiredArgsConstructor
@@ -86,6 +87,21 @@ public class BookingController {
         }
 
         return "redirect:/booking";
+    }
+
+    @GetMapping("available")
+    public String searchAvailableRooms(@RequestParam LocalDate checkInDate,
+                                       @RequestParam LocalDate checkOutDate,
+                                       @RequestParam int numberOfGuests,
+                                       Model model) {
+
+        model.addAttribute("availableRooms", bookingService.searchAvailableRooms(
+                checkInDate,
+                checkOutDate,
+                numberOfGuests
+        ));
+
+        return "booking";
     }
 
     @ExceptionHandler(HandlerMethodValidationException.class)
