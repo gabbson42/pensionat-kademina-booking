@@ -94,19 +94,21 @@ public class BookingController {
     public String searchAvailableRooms(@RequestParam LocalDate checkInDate,
                                        @RequestParam LocalDate checkOutDate,
                                        @RequestParam int numberOfGuests,
-                                       Model model) {
-
-        model.addAttribute("availableRooms", bookingService.searchAvailableRooms(
-                checkInDate,
-                checkOutDate,
-                numberOfGuests
-        ));
-
+                                       Model model, RedirectAttributes redirectAttributes) {
         model.addAttribute("bookings", bookingService.getAllBookings());
         model.addAttribute("bookingDto", new BookingDto());
         model.addAttribute("customers", customerService.getAllCustomers());
         model.addAttribute("rooms", roomService.getAllRoom());
 
+        try {
+            model.addAttribute("availableRooms", bookingService.searchAvailableRooms(
+                    checkInDate,
+                    checkOutDate,
+                    numberOfGuests
+            ));
+        } catch (IllegalArgumentException e) {
+        redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
         return "/booking";
     }
 
