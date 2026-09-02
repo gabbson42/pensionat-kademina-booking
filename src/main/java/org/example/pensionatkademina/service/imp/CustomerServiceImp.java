@@ -1,6 +1,5 @@
 package org.example.pensionatkademina.service.imp;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.pensionatkademina.client.CustomerClient;
 import org.example.pensionatkademina.dto.BookingDto;
@@ -22,10 +21,10 @@ public class CustomerServiceImp implements CustomerService {
 
 
     @Override
-    @Transactional
-    public CustomerFullDto customerToCustomerFullDto(Long id) {
-        Customer customer = customerClient.findById(id).orElseThrow();
-        List<BookingDto> bookingDtos = customer.getBookings().stream()
+    public CustomerFullDto getCustomerFullDto(Long id) {
+        CustomerDto customer = customerClient.findCustomerById(id);
+        List<BookingDto> bookingDtos = bookingRepository.findBookingsByCustomerId(id)
+                .stream()
                 .map(this::bookingToBookingDto).toList();
 
         return CustomerFullDto.builder()
@@ -37,29 +36,25 @@ public class CustomerServiceImp implements CustomerService {
 
     @Override
     public List<CustomerFullDto> getAllCustomers(){
-
-        List<CustomerDto> customerList = customerClient.getallCustomers();
-
-
-        return customerClient.getallCustomers();
+        return customerClient.getAllCustomers()
+                .stream()
+                .map(customerDto -> getCustomerFullDto(customerDto.getId()))
+                .toList();
     }
 
     @Override
     public void addCustomer(CustomerDto customerDto) {
-        Customer customer = customerDtoToCustomer(customerDto);
-        customerClient.save(customer);
+        customerClient.addCustomer(customerDto);
     }
 
     @Override
     public void updateCustomerName(Long id, String newName) {
-        Customer customer = customerClient.findById(id).orElseThrow();
-        customer.setName(newName);
-        customerClient.save(customer);
+        customerClient.updateCustomerName(id, newName);
     }
 
     @Override
     public CustomerDto findCustomerById(Long id) {
-        return customerToCustomerDto(customerClient.findById(id).orElseThrow());
+        return customerClient.findCustomerById(id);
     }
 
     @Override
@@ -71,7 +66,7 @@ public class CustomerServiceImp implements CustomerService {
             throw new IllegalArgumentException();
         }
 
-        customerClient.deleteById(customerId);
+        customerClient.deleteCustomer(customerId);
     }
 
     private BookingDto bookingToBookingDto(Booking booking) {

@@ -1,6 +1,7 @@
 package org.example.pensionatkademina.service.imp;
 
 import lombok.RequiredArgsConstructor;
+import org.example.pensionatkademina.client.CustomerClient;
 import org.example.pensionatkademina.dto.BookingDto;
 import org.example.pensionatkademina.dto.RoomDetailedDto;
 import org.example.pensionatkademina.model.Booking;
@@ -20,7 +21,7 @@ import java.util.List;
 public class BookingServiceImp implements BookingService {
 
     private final BookingRepository bookingRepository;
-    private final CustomerRepository customerRepository;
+    private final CustomerClient customerClient;
     private final RoomRepository roomRepository;
 
     @Override
@@ -93,8 +94,8 @@ public class BookingServiceImp implements BookingService {
                                    BookingDto bookingDto,
                                    Long bookingId) {
 
-        Customer customer = customerRepository.findById(bookingDto.getCustomerId())
-                .orElseThrow(() -> new IllegalArgumentException("Customer does not exist!"));
+        Long customerId = customerClient.findCustomerById(bookingDto.getCustomerId()).getId();
+                //.orElseThrow(() -> new IllegalArgumentException("Customer does not exist!"));
 
         Room room = roomRepository.findById(bookingDto.getRoomId())
                 .orElseThrow(() -> new IllegalArgumentException("Room does not exist!"));
@@ -140,7 +141,7 @@ public class BookingServiceImp implements BookingService {
             throw new IllegalArgumentException("The room is already booked on the selected dates.");
         }
 
-        booking.setCustomer(customer);
+        booking.setCustomerId(customerId);
         booking.setRoom(room);
         booking.setCheckInDate(bookingDto.getCheckInDate());
         booking.setCheckOutDate(bookingDto.getCheckOutDate());
@@ -166,7 +167,7 @@ public class BookingServiceImp implements BookingService {
         BookingDto dto = new BookingDto();
 
         dto.setId(booking.getId());
-        dto.setCustomerId(booking.getCustomer().getId());
+        dto.setCustomerId(booking.getCustomerId());
         dto.setRoomId(booking.getRoom().getId());
         dto.setCheckInDate(booking.getCheckInDate());
         dto.setCheckOutDate(booking.getCheckOutDate());

@@ -1,9 +1,6 @@
 package org.example.pensionatkademina.client;
 
-import org.example.pensionatkademina.dto.BookingDto;
 import org.example.pensionatkademina.dto.CustomerDto;
-import org.example.pensionatkademina.dto.CustomerFullDto;
-import org.example.pensionatkademina.repository.BookingRepository;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +16,7 @@ public class CustomerClient {
     RestTemplate restTemplate;
 
 
-    public List<CustomerDto> getallCustomers() {
+    public List<CustomerDto> getAllCustomers() {
 
         ParameterizedTypeReference<List<CustomerDto>> typeRef = new ParameterizedTypeReference<>() {};
 
@@ -36,7 +33,7 @@ public class CustomerClient {
 
     }
 
-    public CustomerFullDto findCustomerById(Long id) {
+    public CustomerDto findCustomerById(Long id) {
         throw new RuntimeException();
     }
 
@@ -50,9 +47,6 @@ public class CustomerClient {
     public void deleteCustomer (Long customerId){
     }
 
-    private List<BookingDto> getCustomerBookings(Long id) {
-        return bookingRepository.getBookingsByCustomerId(id);
-    }
 
 
 }
