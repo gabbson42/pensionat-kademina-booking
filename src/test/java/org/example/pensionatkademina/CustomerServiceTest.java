@@ -1,13 +1,10 @@
 package org.example.pensionatkademina;
 
-import jakarta.transaction.Transactional;
 import org.example.pensionatkademina.dto.CustomerDto;
 import org.example.pensionatkademina.dto.CustomerFullDto;
 import org.example.pensionatkademina.model.Booking;
-import org.example.pensionatkademina.model.Customer;
 import org.example.pensionatkademina.model.Room;
 import org.example.pensionatkademina.repository.BookingRepository;
-import org.example.pensionatkademina.repository.CustomerRepository;
 import org.example.pensionatkademina.repository.RoomRepository;
 import org.example.pensionatkademina.service.imp.CustomerServiceImp;
 import org.example.pensionatkademina.utility.RoomSize;

@@ -2,10 +2,8 @@ package org.example.pensionatkademina.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.example.pensionatkademina.model.Booking;
-import org.example.pensionatkademina.model.Customer;
 import org.example.pensionatkademina.model.Room;
 import org.example.pensionatkademina.repository.BookingRepository;
-import org.example.pensionatkademina.repository.CustomerRepository;
 import org.example.pensionatkademina.repository.RoomRepository;
 import org.example.pensionatkademina.utility.RoomSize;
 import org.example.pensionatkademina.utility.RoomType;

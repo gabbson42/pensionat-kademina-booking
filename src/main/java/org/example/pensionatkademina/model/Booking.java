@@ -22,9 +22,7 @@ public class Booking {
     private int numberOfGuests;
     private int extraBeds;
 
-    @ManyToOne
-    @JoinColumn
-    private Customer customer;
+    private Long customerId;
 
     @ManyToOne
     private Room room;
