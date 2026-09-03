@@ -2,51 +2,60 @@ package org.example.pensionatkademina.client;
 
 import org.example.pensionatkademina.dto.CustomerDto;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CustomerClient {
 
-    RestTemplate restTemplate;
+    private final RestClient restClient;
 
+    public CustomerClient (RestClient customerRestClient) {
+        this.restClient = customerRestClient;
+    }
 
     public List<CustomerDto> getAllCustomers() {
-
-        ParameterizedTypeReference<List<CustomerDto>> typeRef = new ParameterizedTypeReference<>() {};
-
-        ResponseEntity<List<CustomerDto>> response = restTemplate.exchange(
-                "http://localhost:8081/customer",
-                HttpMethod.GET,
-                null,
-                typeRef);
-
-        if(response.getBody() != null) {
-            return response.getBody();
-        }
-        return new ArrayList<>();
-
+        return restClient.get()
+                .uri("customer")
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {
+                });
     }
 
     public CustomerDto findCustomerById(Long id) {
-        throw new RuntimeException();
+        return restClient.get()
+                .uri("customer/{id}", id)
+                .retrieve()
+                .body(CustomerDto.class);
     }
 
-    public void addCustomer(CustomerDto customerDto) {
-
+    public CustomerDto addCustomer(CustomerDto customerDto) {
+        return restClient.post()
+                .uri("customer/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(customerDto)
+                .retrieve()
+                .body(CustomerDto.class);
     }
 
     public void updateCustomerName(Long id, String newName) {
+        CustomerDto customerDto = CustomerDto.builder().name(newName).id(id).build();
+
+        restClient.put()
+                .uri("edit/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(customerDto)
+                .retrieve()
+                .toBodilessEntity();
     }
 
     public void deleteCustomer (Long customerId){
+        restClient.delete()
+                .uri("delete/{id}", customerId)
+                .retrieve()
+                .toBodilessEntity();
     }
-
-
-
 }
