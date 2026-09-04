@@ -34,7 +34,7 @@ public class CustomerController {
     public String addCustomer(@RequestParam @NotNull
                               @Size(min = 2, max = 20) @Pattern(regexp = "^[A-Za-z-]+$") String name,
                               RedirectAttributes redirectAttributes) {
-        customerService.addCustomer(CustomerDto.builder().name(name).build());
+        customerService.addCustomer(name);
         redirectAttributes.addFlashAttribute(
                 "message", "Customer <strong>" +
                         HtmlUtils.htmlEscape(name) + "</strong> added.");
