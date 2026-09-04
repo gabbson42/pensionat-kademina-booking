@@ -1,7 +1,6 @@
 package org.example.pensionatkademina.client;
 
 import org.example.pensionatkademina.dto.CustomerDto;
-import org.example.pensionatkademina.exception.ServiceUnavailableException;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
