@@ -6,14 +6,17 @@ import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.example.pensionatkademina.dto.CustomerDto;
 import org.example.pensionatkademina.dto.CustomerFullDto;
+import org.example.pensionatkademina.exception.ServiceUnavailableException;
 import org.example.pensionatkademina.service.imp.CustomerServiceImp;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.HtmlUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -25,7 +28,14 @@ public class CustomerController {
 
     @RequestMapping
     public String allCustomers(Model model) {
-        List<CustomerFullDto> customerList = customerService.getAllCustomers();
+        List<CustomerFullDto> customerList;
+        try {
+            customerList = customerService.getAllCustomers();
+        } catch (ResourceAccessException e) {
+            customerList = new ArrayList<>();
+            model.addAttribute("errorMessage",
+                    "The page failed to load properly. Customer Service is currently unavailable" );
+        }
         model.addAttribute("allCustomers", customerList);
         return "customer";
     }
@@ -34,10 +44,16 @@ public class CustomerController {
     public String addCustomer(@RequestParam @NotNull
                               @Size(min = 2, max = 20) @Pattern(regexp = "^[A-Za-z-]+$") String name,
                               RedirectAttributes redirectAttributes) {
-        customerService.addCustomer(name);
-        redirectAttributes.addFlashAttribute(
-                "message", "Customer <strong>" +
-                        HtmlUtils.htmlEscape(name) + "</strong> added.");
+        try {
+            customerService.addCustomer(name);
+            redirectAttributes.addFlashAttribute(
+                    "message", "Customer <strong>" +
+                            HtmlUtils.htmlEscape(name) + "</strong> added.");
+        } catch (ResourceAccessException e) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "The page failed to load properly. Customer Service is currently unavailable" );
+        }
+
         return "redirect:/customer";
     }
 

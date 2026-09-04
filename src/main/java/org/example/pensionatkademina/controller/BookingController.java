@@ -3,6 +3,7 @@ package org.example.pensionatkademina.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.pensionatkademina.dto.BookingDto;
+import org.example.pensionatkademina.dto.CustomerFullDto;
 import org.example.pensionatkademina.service.imp.BookingServiceImp;
 import org.example.pensionatkademina.service.imp.CustomerServiceImp;
 import org.example.pensionatkademina.service.imp.RoomServiceImp;
@@ -11,9 +12,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,9 +31,20 @@ public class BookingController {
 
     @RequestMapping
     public String allBookings(Model model) {
+
+        List<CustomerFullDto> customerList;
+
+        try {
+            customerList = customerService.getAllCustomers();
+        } catch (ResourceAccessException e) {
+            customerList = new ArrayList<>();
+            model.addAttribute("errorMessage",
+                    "The page failed to load properly. Customer Service is currently unavailable");
+        }
+
         model.addAttribute("bookings", bookingService.getAllBookings());
         model.addAttribute("bookingDto", new BookingDto());
-        model.addAttribute("customers", customerService.getAllCustomers());
+        model.addAttribute("customers", customerList);
         model.addAttribute("rooms", roomService.getAllRoom());
 
         return "booking";
@@ -134,6 +149,13 @@ public class BookingController {
     public String handleMissingServletRequestParameterException(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("errorMessage",
                 "You must fill in check-in and check-out date");
+        return "redirect:/booking";
+    }
+
+    @ExceptionHandler(ResourceAccessException.class)
+    public String handleResourceAccessException(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage",
+                "The page failed to load properly. Customer Service is currently unavailable");
         return "redirect:/booking";
     }
 }

@@ -9,6 +9,7 @@ import org.example.pensionatkademina.model.Booking;
 import org.example.pensionatkademina.repository.BookingRepository;
 import org.example.pensionatkademina.service.CustomerService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class CustomerServiceImp implements CustomerService {
     }
 
     @Override
-    public List<CustomerFullDto> getAllCustomers(){
+    public List<CustomerFullDto> getAllCustomers() {
         return customerClient.getAllCustomers()
                 .stream()
                 .map(customerDto -> getCustomerFullDto(customerDto.getId()))
@@ -43,8 +44,8 @@ public class CustomerServiceImp implements CustomerService {
     }
 
     @Override
-    public void addCustomer(String name) {
-        customerClient.addCustomer(name);
+    public CustomerDto addCustomer(String name) {
+        return customerClient.addCustomer(name);
     }
 
     @Override
