@@ -5,11 +5,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     boolean existsByCustomer_Id(Long customerId);
     Booking findBookingById(Long id);
+    List<Booking> findBookingsByCustomerId(Long customerId);
 
     @Query("""
             SELECT COUNT(b) > 0

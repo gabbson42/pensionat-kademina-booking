@@ -1,6 +1,7 @@
 package org.example.pensionatkademina.service.imp;
 
 import lombok.RequiredArgsConstructor;
+import org.example.pensionatkademina.client.CustomerClient;
 import org.example.pensionatkademina.dto.RoomDetailedDto;
 import org.example.pensionatkademina.dto.RoomReservationDto;
 import org.example.pensionatkademina.model.Booking;
@@ -18,6 +19,7 @@ import java.util.List;
 public class RoomServiceImp implements RoomService {
 
     private final RoomRepository roomRepo;
+    private final CustomerClient customerClient;
 
     @Override
     public List<RoomReservationDto> bookingsToReservations(List<Booking> bookings) {
@@ -28,7 +30,7 @@ public class RoomServiceImp implements RoomService {
             listOfReservations.add(
                     RoomReservationDto.builder()
                             .id(booking.getId())
-                            .customerName(booking.getCustomer().getName())
+                            .customerName(customerClient.findCustomerById(booking.getCustomerId()).getName())
                             .checkInDate(booking.getCheckInDate())
                             .checkOutDate(booking.getCheckOutDate())
                             .numberOfGuests(booking.getNumberOfGuests())
