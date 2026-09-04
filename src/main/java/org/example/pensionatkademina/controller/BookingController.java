@@ -32,15 +32,8 @@ public class BookingController {
     @RequestMapping
     public String allBookings(Model model) {
 
-        List<CustomerFullDto> customerList;
-
-        try {
-            customerList = customerService.getAllCustomers();
-        } catch (ResourceAccessException e) {
-            customerList = new ArrayList<>();
-            model.addAttribute("errorMessage",
-                    "The page failed to load properly. Customer Service is currently unavailable");
-        }
+        List<CustomerFullDto> customerList = checkServiceAvailability(
+                "Customer service is not available, new bookings can not be created.", model);
 
         model.addAttribute("bookings", bookingService.getAllBookings());
         model.addAttribute("bookingDto", new BookingDto());
@@ -67,10 +60,12 @@ public class BookingController {
     @GetMapping("edit/{id}")
     public String editBooking(@PathVariable Long id, Model model) {
         BookingDto bookingDto = bookingService.getBookingById(id);
+        List<CustomerFullDto> customerList = checkServiceAvailability(
+                "Customer service is not available, editing bookings will not be possible.", model);
 
         model.addAttribute("bookingDto", bookingDto);
         model.addAttribute("bookings", bookingService.getAllBookings());
-        model.addAttribute("customers", customerService.getAllCustomers());
+        model.addAttribute("customers", customerList);
         model.addAttribute("rooms", roomService.getAllRoom());
 
         return "booking";
@@ -110,9 +105,11 @@ public class BookingController {
                                        @RequestParam LocalDate checkOutDate,
                                        @RequestParam int numberOfGuests,
                                        Model model, RedirectAttributes redirectAttributes) {
+        List<CustomerFullDto> customerList = checkServiceAvailability(
+                "Customer service is not available, new bookings can not be created.", model);
         model.addAttribute("bookings", bookingService.getAllBookings());
         model.addAttribute("bookingDto", new BookingDto());
-        model.addAttribute("customers", customerService.getAllCustomers());
+        model.addAttribute("customers", customerList);
         model.addAttribute("rooms", roomService.getAllRoom());
 
         try {
@@ -125,6 +122,17 @@ public class BookingController {
         redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
         return "/booking";
+    }
+
+    private List<CustomerFullDto> checkServiceAvailability(String message, Model model) {
+        List<CustomerFullDto> customerList;
+        try {
+            customerList = customerService.getAllCustomers();
+        } catch (ResourceAccessException e) {
+            customerList = new ArrayList<>();
+            model.addAttribute("errorMessage", message);
+        }
+        return customerList;
     }
 
     @ExceptionHandler(HandlerMethodValidationException.class)
@@ -149,13 +157,6 @@ public class BookingController {
     public String handleMissingServletRequestParameterException(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("errorMessage",
                 "You must fill in check-in and check-out date");
-        return "redirect:/booking";
-    }
-
-    @ExceptionHandler(ResourceAccessException.class)
-    public String handleResourceAccessException(RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("errorMessage",
-                "The page failed to load properly. Customer Service is currently unavailable");
         return "redirect:/booking";
     }
 }

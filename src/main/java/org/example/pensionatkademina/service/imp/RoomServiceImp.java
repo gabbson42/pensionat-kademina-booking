@@ -10,6 +10,7 @@ import org.example.pensionatkademina.repository.RoomRepository;
 import org.example.pensionatkademina.service.RoomService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class RoomServiceImp implements RoomService {
             String customerName;
             try {
                 customerName = customerClient.findCustomerById(booking.getCustomerId()).getName();
-            } catch (NullPointerException e) {
+            } catch (ResourceAccessException e) {
                 customerName = "Data unavailable";
             }
 
