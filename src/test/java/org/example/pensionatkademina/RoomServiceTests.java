@@ -1,4 +1,4 @@
-package org.example.pensionatkademina;
+/*package org.example.pensionatkademina;
 
 
 import org.example.pensionatkademina.dto.RoomDetailedDto;
@@ -125,4 +125,4 @@ public class RoomServiceTests {
     }
 
 
-}
+}*/

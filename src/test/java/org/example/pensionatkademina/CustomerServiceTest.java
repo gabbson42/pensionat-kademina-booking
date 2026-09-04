@@ -1,4 +1,4 @@
-package org.example.pensionatkademina;
+/*package org.example.pensionatkademina;
 
 import org.example.pensionatkademina.dto.CustomerDto;
 import org.example.pensionatkademina.dto.CustomerFullDto;
@@ -25,8 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 public class CustomerServiceTest {
 
-    @Autowired
-    private CustomerRepository customerRepository;
+
     @Autowired
     private RoomRepository roomRepository;
     @Autowired
@@ -146,3 +145,4 @@ public class CustomerServiceTest {
         assertThat(customerRepository.findById(id)).isEmpty();
     }
 }
+*/

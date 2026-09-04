@@ -1,7 +1,6 @@
 package org.example.pensionatkademina.configuration;
 
 import lombok.RequiredArgsConstructor;
-import org.example.pensionatkademina.model.Booking;
 import org.example.pensionatkademina.model.Room;
 import org.example.pensionatkademina.repository.BookingRepository;
 import org.example.pensionatkademina.repository.RoomRepository;
@@ -10,8 +9,6 @@ import org.example.pensionatkademina.utility.RoomType;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 @Configuration
@@ -19,7 +16,6 @@ import java.util.ArrayList;
 public class DataLoader {
 
     private final RoomRepository roomRepository;
-    private final CustomerRepository customerRepository;
     private final BookingRepository bookingRepository;
 
     @Bean
@@ -44,7 +40,7 @@ public class DataLoader {
                         new Room(null, RoomType.SINGLE, RoomSize.SMALL, new ArrayList<>())
                 );
             }
-
+            /*
             if (customerRepository.count() == 0) {
                 customerRepository.save(Customer.builder().name("Gabriel").build());
                 customerRepository.save(Customer.builder().name("Filip").build());
@@ -58,6 +54,7 @@ public class DataLoader {
                         .customer(customerRepository.findCustomerByName("Gabriel"))
                         .room(roomRepository.findAll().getFirst()).build());
             }
+            */
         };
     }
 }

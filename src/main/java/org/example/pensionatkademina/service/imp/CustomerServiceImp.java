@@ -43,8 +43,8 @@ public class CustomerServiceImp implements CustomerService {
     }
 
     @Override
-    public void addCustomer(CustomerDto customerDto) {
-        customerClient.addCustomer(customerDto);
+    public void addCustomer(String name) {
+        customerClient.addCustomer(name);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class CustomerServiceImp implements CustomerService {
     @Override
     public void deleteCustomer (Long customerId){
 
-        boolean hasBooking = bookingRepository.existsByCustomer_Id(customerId);
+        boolean hasBooking = bookingRepository.existsByCustomerId(customerId);
 
         if (hasBooking){
             throw new IllegalArgumentException();
