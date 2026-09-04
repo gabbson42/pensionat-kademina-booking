@@ -27,10 +27,17 @@ public class RoomServiceImp implements RoomService {
         List<RoomReservationDto> listOfReservations = new ArrayList<>();
 
         for (Booking booking : bookings) {
+            String customerName;
+            try {
+                customerName = customerClient.findCustomerById(booking.getCustomerId()).getName();
+            } catch (NullPointerException e) {
+                customerName = "Data unavailable";
+            }
+
             listOfReservations.add(
                     RoomReservationDto.builder()
                             .id(booking.getId())
-                            .customerName(customerClient.findCustomerById(booking.getCustomerId()).getName())
+                            .customerName(customerName)
                             .checkInDate(booking.getCheckInDate())
                             .checkOutDate(booking.getCheckOutDate())
                             .numberOfGuests(booking.getNumberOfGuests())
