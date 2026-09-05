@@ -65,6 +65,11 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
+    public boolean hasBookedRoom(Long customerId, Long roomId) {
+        return bookingRepository.existsByCustomerIdAndRoom_Id(customerId, roomId);
+    }
+
+    @Override
     public List<RoomDetailedDto> searchAvailableRooms(LocalDate checkInDate,
                                                       LocalDate checkOutDate,
                                                       int numberOfGuests) {

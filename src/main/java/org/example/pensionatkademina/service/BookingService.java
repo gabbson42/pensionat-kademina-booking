@@ -16,4 +16,5 @@ public interface BookingService {
         void deleteBooking(Long id);
         List<RoomDetailedDto> searchAvailableRooms(LocalDate checkInDate, LocalDate checkOutDate,
                                                           int numberOfGuests) ;
+        boolean hasBookedRoom(Long customerId, Long roomId);
 }

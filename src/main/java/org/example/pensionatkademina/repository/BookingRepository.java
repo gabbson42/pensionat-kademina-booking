@@ -10,6 +10,7 @@ import java.util.List;
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     boolean existsByCustomerId(Long customerId);
+    boolean existsByCustomerIdAndRoom_Id(Long customerId, Long roomId);
     Booking findBookingById(Long id);
     List<Booking> findBookingsByCustomerId(Long customerId);
 
