@@ -15,4 +15,11 @@ public class RestClientConfig {
                 .baseUrl(baseUrl)
                 .build();
     }
+
+    @Bean
+    public RestClient reviewRestClient(@Value("${review-service.url}") String baseUrl) {
+        return RestClient.builder()
+                .baseUrl(baseUrl)
+                .build();
+    }
 }

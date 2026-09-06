@@ -1,7 +1,9 @@
 package org.example.pensionatkademina.controller;
 
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.pensionatkademina.dto.BookingCheckResponseDto;
 import org.example.pensionatkademina.dto.BookingDto;
 import org.example.pensionatkademina.dto.CustomerFullDto;
 import org.example.pensionatkademina.service.imp.BookingServiceImp;
@@ -159,4 +161,6 @@ public class BookingController {
                 "You must fill in check-in and check-out date");
         return "redirect:/booking";
     }
+
+
 }
