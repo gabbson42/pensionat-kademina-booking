@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -61,7 +60,7 @@ public class CustomerClient {
         CustomerDto customerDto = CustomerDto.builder().name(newName).id(id).build();
 
         restClient.post()
-                .uri("customer/edit/{id}", id)
+                .uri("customer/edit")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(customerDto)
                 .retrieve()
