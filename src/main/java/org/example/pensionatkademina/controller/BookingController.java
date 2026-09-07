@@ -123,7 +123,7 @@ public class BookingController {
         } catch (IllegalArgumentException e) {
         redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
-        return "/booking";
+        return "booking";
     }
 
     private List<CustomerFullDto> checkServiceAvailability(String message, Model model) {
