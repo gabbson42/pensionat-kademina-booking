@@ -171,6 +171,38 @@
 
     </form>
 
+    <hr class="my-5">
+
+    <h2>Previous reviews</h2>
+
+    <div th:if="${#lists.isEmpty(reviews)}">
+        <p>No reviews yet.</p>
+    </div>
+
+    <div th:each="review : ${reviews}" class="card mb-3">
+        <div class="card-body">
+
+            <h5 class="card-title">
+                Room <span th:text="${review.roomId}"></span>
+            </h5>
+
+            <p class="card-text">
+                Customer ID:
+                <span th:text="${review.customerId}"></span>
+            </p>
+
+            <p class="card-text">
+                Rating:
+                <span th:text="${review.rating}"></span>/5
+            </p>
+
+            <p class="card-text"
+               th:text="${review.comment}">
+            </p>
+
+        </div>
+    </div>
+
 </div>
 
 
