@@ -18,6 +18,11 @@ spec:
           imagePullPolicy: Never
           ports:
             - containerPort: 8080
+          env:
+            - name: CUSTOMER_SERVICE_URL
+              value: http://customer-service:8081
+            - name: REVIEW_SERVICE_URL
+              value: http://rating-service:8083
 
 ---
 
