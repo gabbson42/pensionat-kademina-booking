@@ -19,7 +19,8 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews")
-    public String reviewsPage() {
+    public String reviewsPage(Model model) {
+        model.addAttribute("reviews", reviewClient.getAllReviews());
         return "reviews";
     }
 
@@ -28,12 +29,14 @@ public class ReviewController {
         try {
             reviewClient.createReview(reviewDto);
             model.addAttribute("successMessage", "Review has been sent! thank you for your visit!");
-            return "reviews";
         }
         catch(Exception e) {
-                model.addAttribute(  "errorMessage", "you can only review a room you have booked.");
-            return "reviews";
+            model.addAttribute("errorMessage", "you can only review a room you have booked.");
         }
+
+        model.addAttribute("reviews", reviewClient.getAllReviews());
+
+        return "reviews";
     }
 
 }
