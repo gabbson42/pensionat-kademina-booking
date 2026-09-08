@@ -17,9 +17,13 @@ spec:
           image: mysql:8
           env:
             - name: MYSQL_ROOT_PASSWORD
-              value: ${MYSQL_ROOT_PASSWORD}
+              value: gabbe123
             - name: MYSQL_DATABASE
               value: booking_db
+            - name: MYSQL_USER
+              value: springUser
+            - name: MYSQL_PASSWORD
+              value: secretPassword
           ports:
             - containerPort: 3306
 
