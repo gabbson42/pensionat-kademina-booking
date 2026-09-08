@@ -23,8 +23,8 @@ public class ReviewController {
 
     @PostMapping("/reviews")
     public String reviewsPost(@ModelAttribute("reviewDto") ReviewDto reviewDto) {
+        reviewClient.createReview(reviewDto);
         return "redirect:/reviews";
     }
-
 
 }
