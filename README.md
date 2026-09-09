@@ -118,6 +118,4 @@ With the app running, interactive API docs (springdoc-openapi) are available at:
 Unit tests cover the booking, room, and customer services.
 
 ## Notes
-
-- This service currently has no description or topics set on GitHub — feel free to update the repo "About" section to link back here.
 - The three services share no code; they only communicate over REST, keeping each independently deployable and scalable.
