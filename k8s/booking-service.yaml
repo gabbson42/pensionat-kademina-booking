@@ -13,8 +13,8 @@ spec:
         app: booking-service
     spec:
       containers:
-        - name: pensionat-kademina-full-project-booking-service
-          image: pensionat-kademina-full-project-booking-service
+        - name: booking-service
+          image: booking-service
           imagePullPolicy: Never
           ports:
             - containerPort: 8080
