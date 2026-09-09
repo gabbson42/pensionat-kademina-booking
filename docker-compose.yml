@@ -1,0 +1,64 @@
+services:
+  booking-db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: booking_db
+      MYSQL_USER: ${LOGIN_DB_USER}
+      MYSQL_PASSWORD: ${LOGIN_DB_PASSWORD}
+    volumes:
+      - booking-db:/var/lib/mysql
+
+  customer-db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: customer_db
+      MYSQL_USER: ${LOGIN_DB_USER}
+      MYSQL_PASSWORD: ${LOGIN_DB_PASSWORD}
+    volumes:
+      - customer-db:/var/lib/mysql
+
+  rating_db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: rating_db
+      MYSQL_USER: ${LOGIN_DB_USER}
+      MYSQL_PASSWORD: ${LOGIN_DB_PASSWORD}
+    volumes:
+      - rating_db:/var/lib/mysql
+
+  booking-service:
+    build: ./pensionat-kademina-booking
+    ports:
+      - "8080:8080"
+
+    depends_on:
+     - booking-db
+
+  customer-service:
+    build: ./pensionat-kademina-customer-service
+    ports:
+      - "8081:8080"
+    depends_on:
+      - customer-db
+      - booking-service
+
+  rating-service:
+    build: ./pensionat-kademina-rating-service
+    ports:
+      - "8083:8080"
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://rating_db:3306/rating_db
+      SPRING_DATASOURCE_USERNAME: ${LOGIN_DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${LOGIN_DB_PASSWORD}
+    depends_on:
+      - rating_db
+      - booking-service
+
+volumes:
+  booking-db:
+  customer-db:
+  rating_db:
