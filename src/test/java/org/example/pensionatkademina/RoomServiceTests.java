@@ -1,6 +1,7 @@
-/*package org.example.pensionatkademina;
+package org.example.pensionatkademina;
 
 
+import org.example.pensionatkademina.dto.CustomerDto;
 import org.example.pensionatkademina.dto.RoomDetailedDto;
 import org.example.pensionatkademina.dto.RoomReservationDto;
 import org.example.pensionatkademina.model.Booking;
@@ -15,6 +16,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.mysql.MySQLContainer;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,13 +28,17 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Testcontainers
 public class RoomServiceTests {
+
+    @Container
+    @ServiceConnection
+    static MySQLContainer db =
+            new MySQLContainer(
+                    "mysql:8");
 
     @Autowired
     private RoomRepository roomTestRepository;
-
-    @Autowired
-    private CustomerRepository customerTestRepository;
 
     @Autowired
     private BookingRepository bookingTestRepository;
@@ -50,12 +59,8 @@ public class RoomServiceTests {
         roomTestRepository.save(Room.builder().type(RoomType.DOUBLE).size(RoomSize.SMALL).build());
         roomTestRepository.save(Room.builder().type(RoomType.DOUBLE).size(RoomSize.LARGE).build());
 
-        Customer gabriel = customerTestRepository.save(Customer.builder().name("Gabriel").build());
-        customerTestRepository.save(Customer.builder().name("Filip").build());
-        customerTestRepository.save(Customer.builder().name("Simon").build());
-        customerTestRepository.save(Customer.builder().name("Raul").build());
-
-        savedBookings.add(bookingTestRepository.save(Booking.builder().customer(gabriel)
+        CustomerDto gabriel = CustomerDto.builder().name("Gabriel").build();
+        savedBookings.add(bookingTestRepository.save(Booking.builder().customerId(gabriel.getId())
                 .room(savedRoom)
                 .checkInDate(LocalDate.of(2026, 5, 25))
                 .checkOutDate(LocalDate.of(2026, 5, 26))
@@ -67,7 +72,6 @@ public class RoomServiceTests {
     @AfterEach
     public void tearDown() {
         bookingTestRepository.deleteAll();
-        customerTestRepository.deleteAll();
         roomTestRepository.deleteAll();
     }
 
@@ -104,7 +108,7 @@ public class RoomServiceTests {
 
         assertThat(savedReservations).isNotNull();
         for (RoomReservationDto reservation : savedReservations) {
-            assertThat(reservation.getCustomerName()).isEqualTo("Gabriel");
+            assertThat(reservation.getCustomerName()).isEqualTo("Data unavailable");
             assertThat(reservation.getCheckInDate()).isEqualTo(LocalDate.of(2026, 5, 25));
             assertThat(reservation.getCheckOutDate()).isEqualTo(LocalDate.of(2026, 5, 26));
             assertThat(reservation.getNumberOfGuests()).isEqualTo(1);
@@ -125,4 +129,4 @@ public class RoomServiceTests {
     }
 
 
-}*/
+}
