@@ -21,6 +21,8 @@ services:
 
   rating_db:
     image: mysql:8
+    ports:
+      - "3308:3306"
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: rating_db
@@ -33,14 +35,21 @@ services:
     build: ./pensionat-kademina-booking
     ports:
       - "8080:8080"
-
+    environment:
+      DATABASE_JDBC_URL: jdbc:mysql://booking-db:3306/booking_db
+      MYSQLUSER: ${LOGIN_DB_USER}
+      MYSQLPASSWORD: ${LOGIN_DB_PASSWORD}
     depends_on:
-     - booking-db
+      - booking-db
 
   customer-service:
     build: ./pensionat-kademina-customer-service
     ports:
       - "8081:8080"
+    environment:
+      DATABASE_JDBC_URL: jdbc:mysql://customer-db:3306/customer_db
+      MYSQLUSER: ${LOGIN_DB_USER}
+      MYSQLPASSWORD: ${LOGIN_DB_PASSWORD}
     depends_on:
       - customer-db
       - booking-service
@@ -49,11 +58,12 @@ services:
     build: ./pensionat-kademina-rating-service
     ports:
       - "8083:8080"
-
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://rating_db:3306/rating_db
-      SPRING_DATASOURCE_USERNAME: ${LOGIN_DB_USER}
-      SPRING_DATASOURCE_PASSWORD: ${LOGIN_DB_PASSWORD}
+      MYSQLHOST: rating_db
+      MYSQLPORT: 3306
+      MYSQLDATABASE: rating_db
+      MYSQLUSER: ${LOGIN_DB_USER}
+      MYSQLPASSWORD: ${LOGIN_DB_PASSWORD}
     depends_on:
       - rating_db
       - booking-service
