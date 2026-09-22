@@ -1,25 +1,12 @@
 name: ci
 on:
-    push:
-      branches: [ main ]
-    pull_request:
-      branches: [ main ]
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 jobs:
   test_and_build:
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8
-        env:
-          MYSQL_ROOT_PASSWORD: gabbe123
-          MYSQL_DATABASE: booking_db
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping -h localhost -uroot -proot"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -31,10 +18,10 @@ jobs:
           distribution: "temurin"
           cache: "maven"
 
-      - name: Build with Maven
+      - name: Run tests
         run: mvn test
 
-      - name: Build with Maven
+      - name: Package
         run: mvn -B package -DskipTests
 
       - name: Login to Dockerhub
@@ -42,9 +29,11 @@ jobs:
         run: echo ${{secrets.DOCKERHUB_TOKEN}} | docker login -u ${{secrets.DOCKERHUB_USERNAME}} --password-stdin
 
       - name: build image
+        if: github.event_name == 'push'
         run: |
           docker build -t ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.run_number}} .
 
       - name: push to docker hub
+        if: github.event_name == 'push'
         run: |
           docker push ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.run_number}}
