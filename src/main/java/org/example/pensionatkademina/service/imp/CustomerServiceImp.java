@@ -1,6 +1,7 @@
 package org.example.pensionatkademina.service.imp;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.pensionatkademina.client.CustomerClient;
 import org.example.pensionatkademina.dto.BookingDto;
 import org.example.pensionatkademina.dto.CustomerDto;
@@ -9,10 +10,10 @@ import org.example.pensionatkademina.model.Booking;
 import org.example.pensionatkademina.repository.BookingRepository;
 import org.example.pensionatkademina.service.CustomerService;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.ResourceAccessException;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CustomerServiceImp implements CustomerService {
@@ -45,12 +46,19 @@ public class CustomerServiceImp implements CustomerService {
 
     @Override
     public CustomerDto addCustomer(String name) {
-        return customerClient.addCustomer(name);
+        CustomerDto customer = customerClient.addCustomer(name);
+        log.atInfo()
+                .addKeyValue("id",customer.getId())
+                .log("Customer added successfully");
+        return customer;
     }
 
     @Override
     public void updateCustomerName(Long id, String newName) {
         customerClient.updateCustomerName(id, newName);
+        log.atInfo()
+                .addKeyValue("id", id)
+                .log("Customer name changed successfully");
     }
 
     @Override
@@ -68,6 +76,9 @@ public class CustomerServiceImp implements CustomerService {
         }
 
         customerClient.deleteCustomer(customerId);
+        log.atInfo()
+                .addKeyValue("id", customerId)
+                .log("Customer successfully deleted");
     }
 
     private BookingDto bookingToBookingDto(Booking booking) {
