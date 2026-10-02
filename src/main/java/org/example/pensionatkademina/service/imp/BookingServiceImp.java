@@ -1,6 +1,7 @@
 package org.example.pensionatkademina.service.imp;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.pensionatkademina.client.CustomerClient;
 import org.example.pensionatkademina.dto.BookingDto;
 import org.example.pensionatkademina.dto.RoomDetailedDto;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BookingServiceImp implements BookingService {
 
     private final BookingRepository bookingRepository;
@@ -26,6 +28,7 @@ public class BookingServiceImp implements BookingService {
 
     @Override
     public List<BookingDto> getAllBookings() {
+
         return bookingRepository.findAll()
                 .stream()
                 .map(this::toBookingDto)
@@ -42,9 +45,15 @@ public class BookingServiceImp implements BookingService {
 
     @Override
     public BookingDto createBooking(BookingDto bookingDto) {
-        Booking booking = new Booking();
-
-        return saveBooking(booking, bookingDto, null);
+        BookingDto dto = saveBooking(new Booking(), bookingDto, null);
+        log.atInfo()
+                .addKeyValue("id", dto.getId())
+                .addKeyValue("CheckInDate", dto.getCheckInDate())
+                .addKeyValue("CheckOutDate", dto.getCheckOutDate())
+                .addKeyValue("NumberOfGuests", dto.getNumberOfGuests())
+                .addKeyValue("ExtraBeds", dto.getExtraBeds())
+                .log("Booking created successfully");
+        return dto;
     }
 
     @Override
@@ -52,7 +61,25 @@ public class BookingServiceImp implements BookingService {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found!"));
 
-        return saveBooking(booking, bookingDto, id);
+        BookingDto  dto = saveBooking(booking, bookingDto, id);
+
+        log.atInfo()
+                .addKeyValue("id", booking.getId())
+                .addKeyValue("CheckInDate", booking.getCheckInDate())
+                .addKeyValue("CheckOutDate", booking.getCheckOutDate())
+                .addKeyValue("NumberOfGuests", booking.getNumberOfGuests())
+                .addKeyValue("ExtraBeds", booking.getExtraBeds())
+                .log("Before Updated booking");
+
+        log.atInfo()
+                .addKeyValue("id", booking.getId())
+                .addKeyValue("CheckInDate", bookingDto.getCheckInDate())
+                .addKeyValue("CheckOutDate", bookingDto.getCheckOutDate())
+                .addKeyValue("NumberOfGuests", bookingDto.getNumberOfGuests())
+                .addKeyValue("ExtraBeds", bookingDto.getExtraBeds())
+                .log("After Updated booking");
+
+        return dto;
     }
 
     @Override
@@ -60,8 +87,10 @@ public class BookingServiceImp implements BookingService {
         if (!bookingRepository.existsById(id)) {
             throw new IllegalArgumentException("Booking does not exist!");
         }
-
         bookingRepository.deleteById(id);
+        log.atInfo()
+            .addKeyValue("id", id)
+                .log("Booking Deleted Successfully");
     }
 
     @Override
