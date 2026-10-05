@@ -4,14 +4,17 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
 jobs:
   test_and_build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
+        if: github.event_name != 'workflow_dispatch'
         uses: actions/checkout@v5
 
       - name: setup java environment
+        if: github.event_name != 'workflow_dispatch'
         uses: actions/setup-java@v5
         with:
           java-version: "25"
@@ -19,9 +22,11 @@ jobs:
           cache: "maven"
 
       - name: Run tests
+        if: github.event_name != 'workflow_dispatch'
         run: mvn test
 
       - name: Package
+        if: github.event_name != 'workflow_dispatch'
         run: mvn -B package -DskipTests
 
       - name: Login to Dockerhub
@@ -32,8 +37,24 @@ jobs:
         if: github.event_name == 'push'
         run: |
           docker build -t ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.run_number}} .
+          docker tag ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.run_number}} ${{secrets.DOCKERHUB_USERNAME}}/booking-service:staging-latest
 
       - name: push to docker hub
         if: github.event_name == 'push'
         run: |
           docker push ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.run_number}}
+          docker push ${{secrets.DOCKERHUB_USERNAME}}/booking-service:staging-latest
+
+      - name: Deploy to staging
+        if: github.event_name == 'push'
+        run: |
+          railway service connect --service booking-service --image ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.run_number}}
+        env:
+          RAILWAY_TOKEN: ${{secrets.RAILWAY_STAGING_TOKEN}}
+
+      - name: Deploy to production
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          railway service connect --service booking-service --image ${{secrets.DOCKERHUB_USERNAME}}/booking-service:staging-latest
+        env:
+          RAILWAY_TOKEN: ${{secrets.RAILWAY_PRODUCTION_TOKEN}}
