@@ -5,6 +5,10 @@ on:
   pull_request:
     branches: [ main ]
   workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'The run_number to promote image to production'
+        required: true
 jobs:
   test_and_build:
     runs-on: ubuntu-latest
@@ -43,18 +47,21 @@ jobs:
         if: github.event_name == 'push'
         run: |
           docker push ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.run_number}}
-          docker push ${{secrets.DOCKERHUB_USERNAME}}/booking-service:staging-latest
+
+      - name: Install Railway CLI
+        if: github.event_name == 'push'
+        run: npm install -g @railway/cli
 
       - name: Deploy to staging
         if: github.event_name == 'push'
         run: |
-          railway service connect --service booking-service --image ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.run_number}}
+          railway source service connect --service booking-service --image ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.run_number}}
         env:
           RAILWAY_TOKEN: ${{secrets.RAILWAY_STAGING_TOKEN}}
 
       - name: Deploy to production
         if: github.event_name == 'workflow_dispatch'
         run: |
-          railway service connect --service booking-service --image ${{secrets.DOCKERHUB_USERNAME}}/booking-service:staging-latest
+          railway source service connect --service booking-service --image ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.event.inputs.image_tag }}
         env:
           RAILWAY_TOKEN: ${{secrets.RAILWAY_PRODUCTION_TOKEN}}
