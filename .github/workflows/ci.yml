@@ -41,7 +41,6 @@ jobs:
         if: github.event_name == 'push'
         run: |
           docker build -t ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.run_number}} .
-          docker tag ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.run_number}} ${{secrets.DOCKERHUB_USERNAME}}/booking-service:staging-latest
 
       - name: push to docker hub
         if: github.event_name == 'push'
@@ -55,13 +54,13 @@ jobs:
       - name: Deploy to staging
         if: github.event_name == 'push'
         run: |
-          railway source service connect --service booking-service --image ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.run_number}}
+          railway service source connect --service booking-service --image ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.run_number}}
         env:
           RAILWAY_TOKEN: ${{secrets.RAILWAY_STAGING_TOKEN}}
 
       - name: Deploy to production
         if: github.event_name == 'workflow_dispatch'
         run: |
-          railway source service connect --service booking-service --image ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.event.inputs.image_tag }}
+          railway service source connect --service booking-service --image ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.event.inputs.image_tag }}
         env:
           RAILWAY_TOKEN: ${{secrets.RAILWAY_PRODUCTION_TOKEN}}
