@@ -54,15 +54,21 @@ jobs:
       - name: Deploy to staging
         if: github.event_name == 'push'
         run: |
-          railway link --project ${{secrets.RAILWAY_PROJECT}} --environment staging --service booking-service
-          railway service source connect --environment staging --service booking-service --image ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.run_number}}
+          railway service source connect \
+            --project ${{ secrets.RAILWAY_PROJECT }} \
+            --environment staging \
+            --service booking-service \
+            --image ${{ secrets.DOCKERHUB_USERNAME }}/booking-service:${{ github.run_number }}
         env:
-          RAILWAY_API_TOKEN: ${{secrets.RAILWAY_API_TOKEN}}
+          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
 
       - name: Deploy to production
         if: github.event_name == 'workflow_dispatch'
         run: |
-          railway link --project ${{secrets.RAILWAY_PROJECT}} --environment production --service booking-service
-          railway service source connect --environment production --service booking-service --image ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.event.inputs.image_tag }}
+          railway service source connect \
+            --project ${{ secrets.RAILWAY_PROJECT }} \
+            --environment production \
+            --service booking-service \
+            --image ${{ secrets.DOCKERHUB_USERNAME }}/booking-service:${{ inputs.image_tag }}
         env:
-          RAILWAY_API_TOKEN: ${{secrets.RAILWAY_API_TOKEN}}
+          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
