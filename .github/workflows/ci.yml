@@ -56,11 +56,11 @@ jobs:
         run: |
           railway service source connect --service booking-service --image ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.run_number}}
         env:
-          RAILWAY_TOKEN: ${{secrets.RAILWAY_STAGING_TOKEN}}
+          RAILWAY_API_TOKEN: ${{secrets.RAILWAY_STAGING_TOKEN}}
 
       - name: Deploy to production
         if: github.event_name == 'workflow_dispatch'
         run: |
           railway service source connect --service booking-service --image ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.event.inputs.image_tag }}
         env:
-          RAILWAY_TOKEN: ${{secrets.RAILWAY_PRODUCTION_TOKEN}}
+          RAILWAY_API_TOKEN: ${{secrets.RAILWAY_PRODUCTION_TOKEN}}
