@@ -60,7 +60,7 @@ jobs:
             --service booking-service \
             --image ${{ secrets.DOCKERHUB_USERNAME }}/booking-service:${{ github.run_number }}
         env:
-          RAILWAY_API_TOKEN_STAGING: ${{ secrets.RAILWAY_API_TOKEN_STAGING }}
+          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN_STAGING }}
 
       - name: Deploy to production
         if: github.event_name == 'workflow_dispatch'
