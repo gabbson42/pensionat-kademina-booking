@@ -61,8 +61,6 @@ public class BookingServiceImp implements BookingService {
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Booking not found!"));
 
-        BookingDto  dto = saveBooking(booking, bookingDto, id);
-
         log.atInfo()
                 .addKeyValue("id", booking.getId())
                 .addKeyValue("checkInDate", booking.getCheckInDate())
@@ -70,6 +68,8 @@ public class BookingServiceImp implements BookingService {
                 .addKeyValue("numberOfGuests", booking.getNumberOfGuests())
                 .addKeyValue("extraBeds", booking.getExtraBeds())
                 .log("Before Updated booking");
+
+        BookingDto  dto = saveBooking(booking, bookingDto, id);
 
         log.atInfo()
                 .addKeyValue("id", booking.getId())
