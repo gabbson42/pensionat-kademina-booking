@@ -48,7 +48,7 @@ jobs:
           docker push ${{secrets.DOCKERHUB_USERNAME}}/booking-service:${{github.run_number}}
 
       - name: Install Railway CLI
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' || 'workflow_dispatch'
         run: npm install -g @railway/cli
 
       - name: Deploy to staging
