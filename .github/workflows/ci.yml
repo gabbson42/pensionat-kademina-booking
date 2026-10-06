@@ -55,12 +55,12 @@ jobs:
         if: github.event_name == 'push'
         run: |
           railway service source connect \
-            --project ${{ secrets.RAILWAY_PROJECT }} \
+            --project ${{ secrets.RAILWAY_PROJECT_STAGING }} \
             --environment staging \
             --service booking-service \
             --image ${{ secrets.DOCKERHUB_USERNAME }}/booking-service:${{ github.run_number }}
         env:
-          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+          RAILWAY_API_TOKEN_STAGING: ${{ secrets.RAILWAY_API_TOKEN_STAGING }}
 
       - name: Deploy to production
         if: github.event_name == 'workflow_dispatch'
