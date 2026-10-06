@@ -48,10 +48,10 @@ public class BookingServiceImp implements BookingService {
         BookingDto dto = saveBooking(new Booking(), bookingDto, null);
         log.atInfo()
                 .addKeyValue("id", dto.getId())
-                .addKeyValue("CheckInDate", dto.getCheckInDate())
-                .addKeyValue("CheckOutDate", dto.getCheckOutDate())
-                .addKeyValue("NumberOfGuests", dto.getNumberOfGuests())
-                .addKeyValue("ExtraBeds", dto.getExtraBeds())
+                .addKeyValue("checkInDate", dto.getCheckInDate())
+                .addKeyValue("checkOutDate", dto.getCheckOutDate())
+                .addKeyValue("numberOfGuests", dto.getNumberOfGuests())
+                .addKeyValue("extraBeds", dto.getExtraBeds())
                 .log("Booking created successfully");
         return dto;
     }
@@ -65,18 +65,18 @@ public class BookingServiceImp implements BookingService {
 
         log.atInfo()
                 .addKeyValue("id", booking.getId())
-                .addKeyValue("CheckInDate", booking.getCheckInDate())
-                .addKeyValue("CheckOutDate", booking.getCheckOutDate())
-                .addKeyValue("NumberOfGuests", booking.getNumberOfGuests())
-                .addKeyValue("ExtraBeds", booking.getExtraBeds())
+                .addKeyValue("checkInDate", booking.getCheckInDate())
+                .addKeyValue("checkOutDate", booking.getCheckOutDate())
+                .addKeyValue("numberOfGuests", booking.getNumberOfGuests())
+                .addKeyValue("extraBeds", booking.getExtraBeds())
                 .log("Before Updated booking");
 
         log.atInfo()
                 .addKeyValue("id", booking.getId())
-                .addKeyValue("CheckInDate", bookingDto.getCheckInDate())
-                .addKeyValue("CheckOutDate", bookingDto.getCheckOutDate())
-                .addKeyValue("NumberOfGuests", bookingDto.getNumberOfGuests())
-                .addKeyValue("ExtraBeds", bookingDto.getExtraBeds())
+                .addKeyValue("checkInDate", bookingDto.getCheckInDate())
+                .addKeyValue("checkOutDate", bookingDto.getCheckOutDate())
+                .addKeyValue("numberOfGuests", bookingDto.getNumberOfGuests())
+                .addKeyValue("extraBeds", bookingDto.getExtraBeds())
                 .log("After Updated booking");
 
         return dto;
