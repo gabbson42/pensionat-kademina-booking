@@ -1,7 +1,6 @@
 package org.example.pensionatkademina.client;
 
 import org.example.pensionatkademina.dto.CustomerDto;
-import org.springframework.boot.health.contributor.Health;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -75,10 +74,10 @@ public class CustomerClient {
                 .toBodilessEntity();
     }
 
-    public Health checkStatus() {
-            return restClient.get()
+    public void checkStatus() {
+            restClient.get()
                     .uri("/actuator/health")
                     .retrieve()
-                    .body(Health.class);
+                    .toBodilessEntity();
     }
 }
