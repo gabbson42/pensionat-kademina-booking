@@ -117,5 +117,45 @@ With the app running, interactive API docs (springdoc-openapi) are available at:
 ```
 Unit tests cover the booking, room, and customer services.
 
+## Branch Strategy
+
+We use branch protection on the `main` branch, which means that all changes to `main` must be made through pull requests. 
+A pull request can only be merged into `main` after it has been reviewed.
+
+We have two environments, **staging** and **production**, which are deployed on Railway using the same Docker image from Docker Hub.
+
+Our GitHub Actions workflow is configured to automatically deploy the latest changes to the staging environment whenever a new change is merged into `main`.
+
+Before a new version is deployed to production, manual testing is performed in the staging environment. 
+Based on the test results, the version can then be manually deployed to production using a workflow dispatch, where the specific Docker image to deploy is selected. 
+The same workflow dispatch process can be used to roll back to a previous version if necessary.
+
+
+## Motivation
+
+We chose this branch strategy because we wanted to balance fast development with a controlled and reliable release process.
+
+By protecting the main branch and requiring pull requests and code reviews, we reduce the risk of introducing untested or incorrect changes directly into the main codebase. 
+Code reviews also give the team an opportunity to identify potential problems and share knowledge before changes are merged.
+
+We use main as the source for our deployments. 
+Every change merged into main is automatically deployed to the staging environment, where it can be tested in an environment that is similar to production.
+
+Production deployments are deliberately separated from the automatic staging deployment. 
+This allows us to manually test and verify a version in staging before releasing it to production. 
+We can also choose exactly which Docker image version should be deployed, giving us greater control over production releases.
+
+We chose this approach because our project benefits more from controlled and predictable releases than from having a highly complex branching model. 
+It gives us a simple workflow while still providing important safeguards through code reviews, automated deployment to staging, manual testing, and controlled production releases.
+
+
+## Environments
+
+Staging:
+https://booking-service-staging-a290.up.railway.app/
+
+Production:
+https://booking-service-production-3548.up.railway.app/
+
 ## Notes
 - The three services share no code; they only communicate over REST, keeping each independently deployable and scalable.
