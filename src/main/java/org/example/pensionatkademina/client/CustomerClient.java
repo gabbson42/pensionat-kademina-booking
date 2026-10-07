@@ -77,7 +77,7 @@ public class CustomerClient {
 
     public Health checkStatus() {
             return restClient.get()
-                    .uri("customer/actuator/health")
+                    .uri("/actuator/health")
                     .retrieve()
                     .body(Health.class);
     }
