@@ -119,6 +119,8 @@ Unit tests cover the booking, room, and customer services.
 
 ## Branch Strategy
 
+We are using a Trunk-Based Development strategy, with protected main and a staging/production deployment pipeline
+
 We use branch protection on the `main` branch, which means that all changes to `main` must be made through pull requests. 
 A pull request can only be merged into `main` after it has been reviewed.
 
