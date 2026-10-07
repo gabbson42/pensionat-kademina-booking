@@ -17,7 +17,11 @@ public class KademinaIndicator implements HealthIndicator {
     @Override
     public Health health(){
     try{
-        return customerClient.checkStatus();
+        customerClient.checkStatus();
+        return Health
+                .up()
+                .withDetail("API","Customer Service is up")
+                .build();
     }catch(ResourceAccessException | RestClientResponseException e){
         return Health
                 .down()
