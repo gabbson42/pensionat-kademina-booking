@@ -150,6 +150,11 @@ We can also choose exactly which Docker image version should be deployed, giving
 We chose this approach because our project benefits more from controlled and predictable releases than from having a highly complex branching model. 
 It gives us a simple workflow while still providing important safeguards through code reviews, automated deployment to staging, manual testing, and controlled production releases.
 
+## Merge Conflict
+
+The one merge conflict we had occured when the exact same change was made from two different branches.
+Because the second pull request was made before pulling the latest changes from main, where the change had already been made, it got flagged as a merge conflict.
+Since the the changes were identical the conflict easily got resolved by just accepting the current changes.
 
 ## Environments
 
